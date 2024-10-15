@@ -24,11 +24,13 @@
 **通过 apt 安装的库**
 - [ ] `Qt6.5`： 跨平台`C++`应用开发框架。
 
-**编译安装**
+**编译安装**（以勾选表示完成了双平台编译）
 - [x] `SeetaFace6`：人脸算法。
 - [x] `OpenCV 4.10`：用于调取摄像头，进行图像处理。
 - [x] `gRPC 1.67.0-dev`：用于RPC 网络通信。
 - [x] `Protobuf 5.27.2`：数据的序列化和反序列化。（作为第三方库与`gRPC 1.67.0-dev`一同编译）
+- [ ] `spdlog`: 日志库，输出格式化的日志信息。
+- [ ] `fmt`: 字符串格式化库，使用现代`cpp`标准实现更方便的字符串格式化。
 
 完成交叉编译的库文件 👉 [下载](https://github.com/YusJade/ArmFaceID-client/releases)
 
@@ -49,10 +51,10 @@
 
 
 **何为 `gRPC` ？：**
-`RPC` 即远程过程调用（Remote Procedure Call），可以使得客户端程序调用服务端功能变得像调用本地的方法一样， `gRPC`是谷歌开发的一套实现`RPC`的框架。
+`RPC` 即远程过程调用（Remote Procedure Call），可以使得客户端程序调用服务端功能变得像调用本地的方法一样， `gRPC`是谷歌开发的一套实现`RPC`通信机制的框架。
 
 **如何开始开发`gRPC`：**
-获得编译后的`gRPC`库后，需要为客户端和服务端定义一套“协议”。它用于约定二者通讯时的消息格式以及可用的服务，这个“协议”需要写在一个`.proto`文件中，随后就可以使用`gRPC`库中提供的编译器将其编译为我们需要的`.cpp/.h`文件。
+获得编译后的`gRPC`库后，需要为客户端和服务端定义一套“协议”。它用于约定二者通讯时的消息格式以及可用的服务，这个“协议”需要写在一个`.proto`文件中，可使用`gRPC`库中提供的编译器将其编译为我们需要的`.cpp/.h`文件。
 
 **如何开发`gRPC`：**
 
@@ -66,6 +68,8 @@
 
 **负责开发：**
 <a href="https://github.com/BorderArea01" ><img src="https://github.com/BorderArea01.png" width="50" height="50" style="border-radius: 50%; border: 2px solid #333;"/></a><a href="https://github.com/YusJade" ><img src="https://github.com/yusjade.png" width="50" height="50" style="border-radius: 50%; border: 2px solid #333;"/></a>
+
+`UI`功能示意图如下：
 
 <img src="./assets/ui_desc.png" width=70%>
 
@@ -99,3 +103,19 @@
 
  判断输入图像的人脸是否完整、是否为正脸，以及检查脸部图像的分辨率是否符合要求。
 
+## 开发阶段 
+
+> ⏰ 共 6 周时间 第 12 周前完成 
+
+分为三个阶段：第一阶段（**第七周**），先各自实现一个`OpenCV + Qt`的程序，用于读取摄像头并展示在界面上；第二阶段（**第八周**），向阶段一的程序中集成各自负责的`SeetaFace6`模块，实现相应的功能；第三阶段（**第九、第十周**），将各个模块集成到客户端当中。
+
+同时，用户界面的搭建可以并行进行，在第三阶段时与各个模块一同并入客户端的代码框架中。
+
+**负责客户端的代码框架编写**：
+<a href="https://github.com/YusJade" ><img src="https://github.com/yusjade.png" width="50" height="50" style="border-radius: 50%; border: 2px solid #333;"/></a>
+
+### Q&A
+
+**1.如何确认自己负责的模块能够实现对应的效果？**
+
+对照官方`SeetaFace6` [官方教程文档](https://github.com/seetafaceengine/SeetaFaceTutorial) 编写代码，可以在终端中打印程序执行过程中的变量和结果值，观察这些值来确定模块是否正常运作。
