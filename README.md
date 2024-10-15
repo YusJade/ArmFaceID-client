@@ -10,7 +10,7 @@
 
 - 使用 `GitHub` + `git` 进行版本管理。
   - [👑Git 关卡式学习](https://learngitbranching.js.org/?locale=zh_CN) 
-- 使用 `Clion` / `VSCode` 作为集成开发环境 `IDE`。
+- 使用 `Clion` 作为集成开发环境 `IDE`。
 - 采用 `Google Cpp` 作为编码规范（会采用 `clang-format` 作为代码自动格式化工具）。
   - [📖Google 开源项目风格指南 - Cpp](https://zh-google-styleguide.readthedocs.io/en/latest/google-cpp-styleguide/contents.html)
 - 使用 `CMake` 构建工程。
@@ -25,7 +25,7 @@
 - [ ] `Qt6.5`： 跨平台`C++`应用开发框架。
 
 **编译安装**
-- [ ] `SeetaFace6`：人脸算法。
+- [x] `SeetaFace6`：人脸算法。
 - [x] `OpenCV 4.10`：用于调取摄像头，进行图像处理。
 - [x] `gRPC 1.67.0-dev`：用于RPC 网络通信。
 - [x] `Protobuf 5.27.2`：数据的序列化和反序列化。（作为第三方库与`gRPC 1.67.0-dev`一同编译）
@@ -44,6 +44,10 @@
 
 ### 目标 1：使用 `gRPC` 框架进行网络通信
 
+**负责开发：**
+<a href="https://github.com/YusJade" ><img src="https://github.com/yusjade.png" width="50" height="50" style="border-radius: 50%; border: 2px solid #333;"/></a>
+
+
 **何为 `gRPC` ？：**
 `RPC` 即远程过程调用（Remote Procedure Call），可以使得客户端程序调用服务端功能变得像调用本地的方法一样， `gRPC`是谷歌开发的一套实现`RPC`的框架。
 
@@ -60,15 +64,38 @@
 
 ### 目标 2：使用 `Qt` 搭建用户图形界面
 
-### 目标 3：集成人脸检测模块
+**负责开发：**
+<a href="https://github.com/BorderArea01" ><img src="https://github.com/BorderArea01.png" width="50" height="50" style="border-radius: 50%; border: 2px solid #333;"/></a><a href="https://github.com/YusJade" ><img src="https://github.com/yusjade.png" width="50" height="50" style="border-radius: 50%; border: 2px solid #333;"/></a>
+
+<img src="./assets/ui_desc.png" width=70%>
+
+- 界面简洁明了，功能指示明确。
+- 使用纯代码搭建界面，方便维护。
+- 合理使用设计模式与`Qt`槽/信号机制，保持界面逻辑与业务逻辑的低耦合。
+
+### 目标 3：集成人脸检测模块（前置）
 
 > `SeetaFace6` [官方教程文档](https://github.com/seetafaceengine/SeetaFaceTutorial)
 
-### 目标 4：活体检测模块
+输入图像，调用`FaceDetector`提取其中人脸信息`SeetaFaceInfoArray`。
+
+> 人脸检测的功能实现起来比较简单，而且是后两个目标的前置，故不作为一个独立任务来分配。
+
+### 目标 4：集成活体检测模块
+
+**负责开发：**
+<a href="https://github.com/idealoong" ><img src="https://github.com/idealoong.png" width="50" height="50" style="border-radius: 50%; border: 2px solid #333;"/></a>
 
 > `SeetaFace6` [官方教程文档](https://github.com/seetafaceengine/SeetaFaceTutorial)
 
-### 目标 5：人脸质量评估模块
+输入图像和其中的人脸信息，调用`FaceAntiSpoofing`判别其中人脸是否为二次呈像，以及图像中是否出现平板、手机、照片等攻击介质。
+
+### 目标 5：集成人脸质量评估模块
+
+**负责开发：**
+<a href="https://github.com/Serendipity-hjn" ><img src="https://github.com/Serendipity-hjn.png" width="50" height="50" style="border-radius: 50%; border: 2px solid #333;"/></a>
 
 > `SeetaFace6` [官方教程文档](https://github.com/seetafaceengine/SeetaFaceTutorial)
+
+ 判断输入图像的人脸是否完整、是否为正脸，以及检查脸部图像的分辨率是否符合要求。
 
