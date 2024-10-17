@@ -40,7 +40,10 @@ int main(int argc, char *argv[]) {
   settings.cam_url = camera_url;
   arm_face_id::Camera camera(settings, frame_queue);
 
+  camera.Open();
   std::thread camera_thread(&arm_face_id::Camera::Start, &camera);
+
+  camera_thread.join();
   /*---------------------------------------*/
 
   /*---- 初始化 Qt 用户界面  ----*/

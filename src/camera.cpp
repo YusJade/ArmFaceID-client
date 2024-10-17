@@ -1,5 +1,7 @@
 #include "camera.h"
 
+#include <thread>
+
 #include <opencv2/core/mat.hpp>
 #include <opencv2/highgui.hpp>
 #include <spdlog/spdlog.h>
@@ -18,11 +20,11 @@ Camera::Camera(const Camera::Settings& settings,
 void Camera::Start() {
   if (!cap_.isOpened()) {
     spdlog::error("无法打开摄像头");
+    return;
   }
   is_running_ = true;
   cv::Mat frame;
   while (is_running_) {
-    if (!cap_.isOpened()) continue;
     cap_ >> frame;
     if (frame.empty()) continue;
     PutTask(frame);
