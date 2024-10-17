@@ -22,15 +22,18 @@
 以下是开发中所需的库，可自行在主机编译`x86`以及`aarch64`版本，下文也会给出库编译后的下载链接。
 
 **通过 apt 安装的库**
-- [ ] `Qt6.5`： 跨平台`C++`应用开发框架。
+*编译安装* 中的库（除了`SeetaFace6`），其实在 Ubuntu 中皆可通过 apt 进行安装。
 
-**编译安装**（以勾选表示完成了双平台编译）
+**编译安装**（已勾选表示完成了双平台编译）
+- [ ] `Qt6.5`： 跨平台`C++`应用开发框架。
 - [x] `SeetaFace6`：人脸算法。
 - [x] `OpenCV 4.10`：用于调取摄像头，进行图像处理。
 - [x] `gRPC 1.67.0-dev`：用于RPC 网络通信。
-- [x] `Protobuf 5.27.2`：数据的序列化和反序列化。（作为第三方库与`gRPC 1.67.0-dev`一同编译）
-- [ ] `spdlog`: 日志库，输出格式化的日志信息。
-- [ ] `fmt`: 字符串格式化库，使用现代`cpp`标准实现更方便的字符串格式化。
+- [x] `Protobuf 5.27.2`：（集成在`gRPC`内）数据的序列化和反序列化。（作为第三方库与`gRPC 1.67.0-dev`一同编译）
+- [x] `absl`: （集成在`gRPC`内）一系列实用的工具库（日志、字符串格式化、命令行参数解析......），这里主要使用其命令行参数解析模块。 
+
+- [x] `spdlog`: 日志库，输出格式化的日志信息。
+- [x] `fmt`: （集成在`spdlog`内）字符串格式化库，使用现代`cpp`标准实现更方便的字符串格式化。
 
 完成交叉编译的库文件 👉 [下载](https://github.com/YusJade/ArmFaceID-client/releases)
 
@@ -68,6 +71,7 @@
 
 **负责开发：**
 <a href="https://github.com/BorderArea01" ><img src="https://github.com/BorderArea01.png" width="50" height="50" style="border-radius: 50%; border: 2px solid #333;"/></a><a href="https://github.com/YusJade" ><img src="https://github.com/yusjade.png" width="50" height="50" style="border-radius: 50%; border: 2px solid #333;"/></a>
+
 
 `UI`功能示意图如下：
 
