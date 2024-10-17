@@ -1,0 +1,3 @@
+[submodule "third_party/treasure_chest"]
+	path = third_party/treasure_chest
+	url = git@github.com:YusJade/treasure_chest.git
