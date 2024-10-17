@@ -1,0 +1,22 @@
+[
+{
+  "directory": "/home/yu/codefield/ArmFaceID-client/build",
+  "command": "/usr/bin/c++  -I/home/yu/codefield/ArmFaceID-client/include -I/home/yu/codefield/ArmFaceID-client/third_party -I/home/yu/codefield/ArmFaceID-client/third_party/treasure_chest -isystem /usr/local/include/opencv4  -o CMakeFiles/armfaceid-client.dir/src/main.cpp.o -c /home/yu/codefield/ArmFaceID-client/src/main.cpp",
+  "file": "/home/yu/codefield/ArmFaceID-client/src/main.cpp"
+},
+{
+  "directory": "/home/yu/codefield/ArmFaceID-client/build/third_party/treasure_chest/observer",
+  "command": "/usr/bin/c++  -I/home/yu/codefield/ArmFaceID-client/include -I/home/yu/codefield/ArmFaceID-client/third_party -I/home/yu/codefield/ArmFaceID-client/third_party/treasure_chest  -o CMakeFiles/observer.dir/main.cpp.o -c /home/yu/codefield/ArmFaceID-client/third_party/treasure_chest/observer/main.cpp",
+  "file": "/home/yu/codefield/ArmFaceID-client/third_party/treasure_chest/observer/main.cpp"
+},
+{
+  "directory": "/home/yu/codefield/ArmFaceID-client/build/third_party/treasure_chest/sync_queue",
+  "command": "/usr/bin/c++  -I/home/yu/codefield/ArmFaceID-client/include -I/home/yu/codefield/ArmFaceID-client/third_party -I/home/yu/codefield/ArmFaceID-client/third_party/treasure_chest  -o CMakeFiles/sync_queue.dir/test.cpp.o -c /home/yu/codefield/ArmFaceID-client/third_party/treasure_chest/sync_queue/test.cpp",
+  "file": "/home/yu/codefield/ArmFaceID-client/third_party/treasure_chest/sync_queue/test.cpp"
+},
+{
+  "directory": "/home/yu/codefield/ArmFaceID-client/build/third_party/treasure_chest/producer_consumer",
+  "command": "/usr/bin/c++  -I/home/yu/codefield/ArmFaceID-client/include -I/home/yu/codefield/ArmFaceID-client/third_party -I/home/yu/codefield/ArmFaceID-client/third_party/treasure_chest  -o CMakeFiles/producer_consumer.dir/test.cpp.o -c /home/yu/codefield/ArmFaceID-client/third_party/treasure_chest/producer_consumer/test.cpp",
+  "file": "/home/yu/codefield/ArmFaceID-client/third_party/treasure_chest/producer_consumer/test.cpp"
+}
+]

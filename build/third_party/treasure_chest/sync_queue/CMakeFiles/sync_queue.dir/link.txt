@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/sync_queue.dir/test.cpp.o -o sync_queue 
