@@ -1,3 +1,5 @@
+#include <QApplication>
+#include <memory>
 #include <string>
 #include <thread>
 
@@ -7,6 +9,7 @@
 #include <opencv2/core/mat.hpp>
 
 #include "camera.h"
+#include "qt_gui/qt_gui.h"
 
 ABSL_FLAG(int, camera_index, 0, "必需：本地摄像头 index");
 ABSL_FLAG(bool, net_camera, true, "可选：是否启用网络摄像头");
@@ -17,6 +20,7 @@ ABSL_FLAG(std::string, server_addr, "http://localhost:12345/",
           "必需：服务器地址");
 
 int main(int argc, char *argv[]) {
+  // 解析命令行参数，配置各个模块的设置
   absl::SetProgramUsageMessage("可用的参数：");
   absl::ParseCommandLine(argc, argv);
 
@@ -26,11 +30,11 @@ int main(int argc, char *argv[]) {
   std::string server_addr = absl::GetFlag(FLAGS_server_addr);
   std::string model_dir = absl::GetFlag(FLAGS_model_dir);
 
-  /*---- 初始化 gRPC 服务器  ----*/
+  // TODO: 初始化 gRPC 服务器
 
   /*----------------------------*/
 
-  /*---- 初始化 摄像头与 SeetaFace 模块 ----*/
+  // 初始化 摄像头与 SeetaFace 模块
 
   treasure_chest::pattern::SyncQueue<cv::Mat> frame_queue;
 
@@ -42,13 +46,17 @@ int main(int argc, char *argv[]) {
 
   camera.Open();
   std::thread camera_thread(&arm_face_id::Camera::Start, &camera);
-
-  camera_thread.join();
+  camera_thread.detach();
   /*---------------------------------------*/
 
   /*---- 初始化 Qt 用户界面  ----*/
+  QApplication app(argc, argv);
 
+  std::shared_ptr<arm_face_id::QtGUI> qt_gui(new arm_face_id::QtGUI);
+  qt_gui->InitWindow();
+  qt_gui->show();
+  camera.AddObserver<cv::Mat>(qt_gui);
   /*----------------------------*/
 
-  return 0;
+  return app.exec();
 }

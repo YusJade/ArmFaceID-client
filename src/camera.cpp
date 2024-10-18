@@ -27,7 +27,10 @@ void Camera::Start() {
   while (is_running_) {
     cap_ >> frame;
     if (frame.empty()) continue;
+    // 向任务队列发送任务
     PutTask(frame);
+    // 通知观察者新的画面帧
+    Notify(frame);
     std::this_thread::sleep_for(std::chrono::milliseconds(200));
   }
 }
