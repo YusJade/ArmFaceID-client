@@ -9,7 +9,10 @@ set(CMAKE_AUTOMOC ON)
 
 include_directories(include third_party third_party/treasure_chest)
 
-include(path_config.cmake)
+if(EXISTS "${CMAKE_SOURCE_DIR}/path_config.cmake")
+  message(STATUS "应用配置文件 path_config.cmake")
+  include(path_config.cmake)
+endif()
 
 set(CMAKE_MODULE_PATH ${SeetaFace6_DIR}/cmake)
 message(STATUS "CMAKE_MODULE_PATH: ${SeetaFace6_DIR}/cmake")
@@ -34,14 +37,19 @@ elseif(${Qt5_FOUND})
 endif()
 
 add_executable(armfaceid-client src/main.cpp src/camera.cpp 
-                                src/qt_gui/qt_gui.cpp src/utils/base.cpp)
+                                src/qt_gui/qt_gui.cpp src/utils/base.cpp
+                                src/face_analyzer.cpp)
 
 target_link_libraries(
   armfaceid-client PUBLIC absl::flags absl::flags_parse absl::flags_usage
-                          spdlog::spdlog Qt6::Core Qt6::Widgets ${OpenCV_LIBS})
+                          spdlog::spdlog Qt6::Core Qt6::Widgets ${OpenCV_LIBS}
+                          ${SeetaFaceDetector_LIBRARY} ${SeetaFaceLandmarker_LIBRARY}
+                          ${SeetaFaceAntiSpoofingX_LIBRARY} ${SeetaQualityAssessor_LIBRARY})
 
 target_include_directories(
-  armfaceid-client PUBLIC ${OpenCV_INCLUDE_DIRS} ${TREASURE_CHEST_INCLUDE_DIRS}
-                          include)
+  armfaceid-client PUBLIC include 
+                          ${OpenCV_INCLUDE_DIRS} ${TREASURE_CHEST_INCLUDE_DIRS}                                                 
+                          ${SeetaFaceDetector_INCLUDE_DIR} ${SeetaFaceLandmarker_INCLUDE_DIR}
+                          ${SeetaFaceAntiSpoofingX_INCLUDE_DIR} ${SeetaQualityAssessor_INCLUDE_DIR})
 
 add_subdirectory(third_party)
