@@ -14,8 +14,14 @@ if(EXISTS "${CMAKE_SOURCE_DIR}/path_config.cmake")
   include(path_config.cmake)
 endif()
 
-set(CMAKE_MODULE_PATH ${SeetaFace6_DIR}/cmake)
+set(CMAKE_MODULE_PATH $ENV{SeetaFace6_DIR}/cmake)
 message(STATUS "CMAKE_MODULE_PATH: ${SeetaFace6_DIR}/cmake")
+
+set(SeetaFaceDetector_ROOT_DIR $ENV{SeetaFace6_DIR})
+set(SeetaFaceLandmarker_ROOT_DIR $ENV{SeetaFace6_DIR})
+set(SeetaQualityAssessor_ROOT_DIR $ENV{SeetaFace6_DIR})
+set(SeetaFaceAntiSpoofingX_ROOT_DIR $ENV{SeetaFace6_DIR})
+set(SeetaQualityAssessor_ROOT_DIR $ENV{SeetaFace6_DIR})
 
 find_package(SeetaFaceDetector REQUIRED)
 find_package(SeetaFaceLandmarker REQUIRED)

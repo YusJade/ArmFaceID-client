@@ -131,6 +131,21 @@ cmake --build ./build
 
 ### Q&A
 
-**1.如何确认自己负责的模块能够实现对应的效果？**
+**1. 如何确认自己负责的模块能够实现对应的效果？**
 
 对照官方`SeetaFace6` [官方教程文档](https://github.com/seetafaceengine/SeetaFaceTutorial) 编写代码，可以在终端中打印程序执行过程中的变量和结果值，观察这些值来确定模块是否正常运作。
+
+**2. CMake 报错找不到 `SeetaFace6` 相关的库？**
+
+在工程顶层目录新建`script/env_config.sh`，内容如下：
+
+```bash
+#!/bin/bash
+
+# 修改为自己主机的对应位置
+export SeetaFace6_DIR=/home/yu/codefield/SeetaFace6/build
+
+export LD_LIBRARY_PATH=$SeetaFace6_DIR/lib64/:$LD_LIBRARY_PATH:$LD_LIBRARY_PATH
+```
+
+执行 `chmod 775 script/env_config.sh`赋予可运行权限，每次打开新终端时运行 `source script/env_config.sh`即可。
