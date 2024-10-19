@@ -31,16 +31,21 @@ find_package(SeetaQualityAssessor REQUIRED)
 find_package(OpenCV CONFIG REQUIRED)
 find_package(absl CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
-find_package(Qt6 COMPONENTS Core Widgets NAMES Qt6 Qt5 CONFIG REQUIRED)
+find_package(Qt6 COMPONENTS Core Widgets CONFIG REQUIRED)
+
+if(${Qt6_FOUND})
+  set(Qt_LIBRARIES Qt6::Core Qt6::Widgets)
+else()
+  find_package(Qt5 COMPONENTS Core Widgets CONFIG REQUIRED)
+  if(${Qt5_FOUND})
+    set(Qt_LIBRARIES Qt5::Core Qt5::Widgets)
+  else()
+    message(STATUS "找不到可用的 Qt !")
+  endif()
+endif()
 
 message(STATUS "Qt6_FOUND: ${Qt6_FOUND}")
 message(STATUS "Qt5_FOUND: ${Qt5_FOUND}")
-
-if(${Qt6_FOUND})
-  set(Qt "Qt6")
-elseif(${Qt5_FOUND})
-  set(Qt "Qt5")
-endif()
 
 add_executable(armfaceid-client src/main.cpp src/camera.cpp 
                                 src/qt_gui/qt_gui.cpp src/utils/base.cpp
@@ -48,7 +53,7 @@ add_executable(armfaceid-client src/main.cpp src/camera.cpp
 
 target_link_libraries(
   armfaceid-client PUBLIC absl::flags absl::flags_parse absl::flags_usage
-                          spdlog::spdlog Qt6::Core Qt6::Widgets ${OpenCV_LIBS}
+                          spdlog::spdlog ${Qt_LIBRARIES} ${OpenCV_LIBS}
                           ${SeetaFaceDetector_LIBRARY} ${SeetaFaceLandmarker_LIBRARY}
                           ${SeetaFaceAntiSpoofingX_LIBRARY} ${SeetaQualityAssessor_LIBRARY})
 
