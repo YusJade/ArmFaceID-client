@@ -56,6 +56,12 @@ class FaceAnalyzer : public treasure_chest::pattern::Subject,
   FaceAnalyzer(const Settings &,
                treasure_chest::pattern::SyncQueue<cv::Mat> &queue);
 
+  /**
+   * @brief
+   * 阻塞当前线程，FaceAnalyzer 会开始等待任务，对画面帧进行人脸检测、
+   * 活体检测、质量评估，再视需要调用服务端服务进行人脸识别，并
+   * 通过观察者模式在以上过程中通知其他模块当前任务的状态。
+   */
   void Process();
 
  private:

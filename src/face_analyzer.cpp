@@ -31,5 +31,7 @@ void FaceAnalyzer::Process() {
     // 活体检测
 
     // 人脸质量评估
+
+    // 调用服务端的人脸识别服务
   }
 }
