@@ -1,5 +1,6 @@
 #pragma once
 
+#include <qpixmap.h>
 #include <qwidget.h>
 
 #include <QGridLayout>
@@ -29,5 +30,6 @@ class QtGUI
   QWidget* main_widget_ = nullptr;
   QGridLayout* main_grid_layout_ = nullptr;
   QLabel* camera_frame_label_ = nullptr;
+  QPixmap info_notification_pixmap_;
 };
 }  // namespace arm_face_id
