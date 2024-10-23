@@ -36,10 +36,16 @@ class FaceAnalyzer : public treasure_chest::pattern::Subject,
   struct EventBase {
     const SeetaImageData &simg;
     const EventType type;
+
+    EventBase(const SeetaImageData &_simg, const EventType _type)
+        : simg(_simg), type(_type) {}
   };
 
   struct DetectorEvent : EventBase {
     const SeetaFaceInfoArray &faces;
+    DetectorEvent(const SeetaFaceInfoArray &_faces, const SeetaImageData &_simg,
+                  const EventType _type)
+        : faces(_faces), EventBase(_simg, _type) {}
   };
 
   struct LandmarkerEvent : EventBase {};
