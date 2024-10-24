@@ -6,6 +6,8 @@
 #include "CFaceInfo.h"
 #include "Common/CStruct.h"
 #include "FaceAntiSpoofing.h"
+#include "QualityOfIntegrity.h"
+#include "QualityStructure.h"
 
 using namespace arm_face_id;
 
@@ -31,6 +33,21 @@ void FaceAnalyzer::Process() {
     // 活体检测
 
     // 人脸质量评估
+    // 完整度评估
+    for (int i = 0; i < faces.size; ++i) {
+      SeetaRect face_rect = faces.data[i].pos;
+      SeetaPointF points[5];
+      landmarker_.mark(simg, face_rect, points);
+      seeta::QualityResult integrity_result =
+          integrity_assessor_.check(simg, face_rect, points, 5);
+      Notify<QualityAssessorEvent>(
+          QualityAssessorEvent{integrity_result, simg, QUALITY_ASSESSOR});
+      if (integrity_result.level == seeta::QualityLevel::LOW) {
+        spdlog::info("人脸分析器：人脸不完整。");
+      }else {
+        spdlog::info("人脸分析器：人脸完整。");
+      }
+    }
 
     // 调用服务端的人脸识别服务
   }

@@ -56,7 +56,11 @@ class FaceAnalyzer : public treasure_chest::pattern::Subject,
 
   struct QualityAssessorEvent : EventBase {
     const seeta::QualityResult res;
-  };
+
+    QualityAssessorEvent(const seeta::QualityResult &_res, const SeetaImageData &_simg, const EventType _type)
+        : res(_res), EventBase(_simg, _type) {}
+};
+
 
   FaceAnalyzer() = delete;
   FaceAnalyzer(const Settings &,

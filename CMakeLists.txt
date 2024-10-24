@@ -4,7 +4,7 @@ project(armfaceid-client)
 
 set(CMAKE_BUILD_TYPE DEBUG)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_AUTOMOC ON)
 
 include_directories(include third_party third_party/treasure_chest)
@@ -32,7 +32,7 @@ find_package(SeetaQualityAssessor REQUIRED)
 find_package(OpenCV CONFIG REQUIRED)
 find_package(absl CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
- find_package(Qt6 COMPONENTS Core Widgets CONFIG)
+find_package(Qt6 COMPONENTS Core Widgets CONFIG)
 
 if(${Qt6_FOUND})
   set(Qt_LIBRARIES Qt6::Core Qt6::Widgets)
