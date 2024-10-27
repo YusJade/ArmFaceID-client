@@ -30,6 +30,9 @@ class QtGUI
   QWidget* main_widget_ = nullptr;
   QGridLayout* main_grid_layout_ = nullptr;
   QLabel* camera_frame_label_ = nullptr;
-  QPixmap info_notification_pixmap_;
+  QPixmap faces_notification_pixmap_;
+  QPixmap antispoofing_notification_pixmap_;
+
+  int notification_delay_cnter = 0;
 };
 }  // namespace arm_face_id
