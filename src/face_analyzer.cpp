@@ -31,6 +31,27 @@ void FaceAnalyzer::Process() {
     if (faces.size == 0) continue;
     spdlog::info("人脸分析器：检测到 {} 张人脸。", faces.size);
     // 活体检测
+        for (int i = 0; i < faces.size; ++i) {
+            SeetaRect face_rect = faces.data[i].pos;
+            SeetaPointF points[5];
+            landmarker_.mark(simg, face_rect, points);
+            auto status = antispoofing_.Predict(simg, face_rect, points);
+            switch(status) {
+                case seeta::FaceAntiSpoofing::REAL:
+                    spdlog::info("活体检测：检测到真实人脸。");
+                    break;
+                case seeta::FaceAntiSpoofing::SPOOF:
+                    spdlog::info("活体检测：检测到攻击人脸。");
+                    break;
+                case seeta::FaceAntiSpoofing::FUZZY:
+                    spdlog::info("活体检测：无法判断。");
+                    break;
+                case seeta::FaceAntiSpoofing::DETECTING:
+                    spdlog::info("活体检测：正在检测。");
+                    break;
+            }
+        }
+        // 人脸质量评估
 
     // 人脸质量评估
     // 完整度评估
