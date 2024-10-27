@@ -1,7 +1,5 @@
 #pragma once
 
-#include <vector>
-
 #include <opencv2/core/mat.hpp>
 #include <seeta/FaceAntiSpoofing.h>
 #include <seeta/FaceDetector.h>
@@ -34,14 +32,7 @@ class FaceAnalyzer : public treasure_chest::pattern::Subject,
   };
 
  public:
-  enum EventType {
-    BASE,
-    DETECTOR,
-    LANDMARKER,
-    ANTISPOOFING,
-    QUALITY_ASSESSOR,
-    INTEGRITY,
-  };
+  enum EventType { BASE, DETECTOR, LANDMARKER, ANTISPOOFING, QUALITY_ASSESSOR };
   struct EventBase {
     const SeetaImageData &simg;
     const EventType type;
@@ -59,28 +50,17 @@ class FaceAnalyzer : public treasure_chest::pattern::Subject,
 
   struct LandmarkerEvent : EventBase {};
 
-  struct AntiSpoofingInfo {
-    const seeta::FaceAntiSpoofing::Status status;
-    const SeetaFaceInfo face_info;
-
-    AntiSpoofingInfo(const seeta::FaceAntiSpoofing::Status &_status,
-                     const SeetaFaceInfo &_face_info)
-        : status(_status), face_info(_face_info) {}
-  };
-
   struct AntiSpoofingEvent : EventBase {
-    std::vector<AntiSpoofingInfo> infos;
-    AntiSpoofingEvent(const SeetaImageData &_simg, const EventType _type)
-        : EventBase(_simg, _type) {}
+    const seeta::FaceAntiSpoofing::Status status;
   };
 
   struct QualityAssessorEvent : EventBase {
     const seeta::QualityResult res;
 
-    QualityAssessorEvent(const seeta::QualityResult &_res,
-                         const SeetaImageData &_simg, const EventType _type)
+    QualityAssessorEvent(const seeta::QualityResult &_res, const SeetaImageData &_simg, const EventType _type)
         : res(_res), EventBase(_simg, _type) {}
-  };
+};
+
 
   FaceAnalyzer() = delete;
   FaceAnalyzer(const Settings &,

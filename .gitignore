@@ -6,4 +6,3 @@
 path_config.cmake
 *.tar.*
 /*build*
-.idea
