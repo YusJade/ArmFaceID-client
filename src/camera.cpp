@@ -31,7 +31,7 @@ void Camera::Start() {
     PutTask(frame);
     // 通知观察者新的画面帧
     Notify(frame);
-    std::this_thread::sleep_for(std::chrono::milliseconds(200));
+    std::this_thread::sleep_for(std::chrono::milliseconds(30));
   }
 }
 

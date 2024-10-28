@@ -1,7 +1,6 @@
 #include <QApplication>
 #include <memory>
 #include <string>
-
 #include <thread>
 #include <vector>
 

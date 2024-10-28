@@ -1,21 +1,27 @@
 #include "qt_gui/qt_gui.h"
 
+#include <qbrush.h>
 #include <qgridlayout.h>
 #include <qicon.h>
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qnamespace.h>
 #include <qpainter.h>
+#include <qpen.h>
 #include <qpixmap.h>
 #include <qstringview.h>
 #include <qwidget.h>
 
 #include <string>
 
+#include "Common/CStruct.h"
+#include "FaceAntiSpoofing.h"
 #include "face_analyzer.h"
 #include "utils/base.h"
 
 using namespace arm_face_id;
+
+constexpr int flush_notification_cnt = 10;
 
 void QtGUI::InitWindow() {
   main_widget_ = new QWidget;
@@ -26,8 +32,10 @@ void QtGUI::InitWindow() {
   camera_frame_label_ = new QLabel("camera");
   camera_frame_label_->setFixedSize(640, 400);
 
-  info_notification_pixmap_ = QPixmap(camera_frame_label_->size());
-  info_notification_pixmap_.fill(Qt::transparent);
+  faces_notification_pixmap_ = QPixmap(camera_frame_label_->size());
+  faces_notification_pixmap_.fill(Qt::transparent);
+  antispoofing_notification_pixmap_ = QPixmap(camera_frame_label_->size());
+  antispoofing_notification_pixmap_.fill(Qt::transparent);
 
   QPixmap pixmap(camera_frame_label_->size());
   QPainter painter(&pixmap);
@@ -42,11 +50,19 @@ void QtGUI::OnNotify(const cv::Mat& message) {
   // 将信息提示帧与画面帧叠加
   QPixmap frame = QPixmap::fromImage(utils::mat_to_qimage(message));
   QPainter painter(&frame);
-  painter.drawPixmap(0, 0, info_notification_pixmap_);
+  painter.drawPixmap(0, 0, faces_notification_pixmap_);
+  painter.drawPixmap(0, 0, antispoofing_notification_pixmap_);
   camera_frame_label_->setPixmap(frame);
+
+  ++notification_delay_cnter;
+  if (notification_delay_cnter == flush_notification_cnt) {
+    faces_notification_pixmap_.fill(Qt::transparent);
+    antispoofing_notification_pixmap_.fill(Qt::transparent);
+  }
 }
 
 void QtGUI::OnNotify(const FaceAnalyzer::EventBase& message) {
+  notification_delay_cnter = 0;
   // 通过 EventBase 的 type 转换为具体的信息类型
   if (message.type == FaceAnalyzer::DETECTOR) {
     const auto& event =
@@ -54,9 +70,9 @@ void QtGUI::OnNotify(const FaceAnalyzer::EventBase& message) {
     // 绘制人脸检测框
     // QPixmap pixmap = camera_frame_label_->pixmap();
     // 绘制并缓存信息提示帧，待与画面帧叠加，避免丢失信息提示帧
-    info_notification_pixmap_.fill(Qt::transparent);
-    QPainter painter(&info_notification_pixmap_);
-    painter.setPen(Qt::yellow);
+    faces_notification_pixmap_.fill(Qt::transparent);
+    QPainter painter(&faces_notification_pixmap_);
+    painter.setPen(Qt::green);
     for (int i = 0; i < event.faces.size; i++) {
       auto& face = event.faces.data[i];
       auto& face_rect = event.faces.data[i].pos;
@@ -69,5 +85,21 @@ void QtGUI::OnNotify(const FaceAnalyzer::EventBase& message) {
                        "分数：" + QString::number(face.score));
     }
     // camera_frame_label_->setPixmap(pixmap);
+  } else if (message.type == FaceAnalyzer::ANTISPOOFING) {
+    const auto& event =
+        static_cast<const FaceAnalyzer::AntiSpoofingEvent&>(message);
+
+    QPainter painter(&antispoofing_notification_pixmap_);
+    antispoofing_notification_pixmap_.fill(Qt::transparent);
+    for (auto info : event.infos) {
+      if (info.status == seeta::FaceAntiSpoofing::REAL) continue;
+      SeetaRect face_rect = info.face_info.pos;
+      painter.setPen(QPen(Qt::red, 2));
+      painter.drawRect(face_rect.x, face_rect.y, face_rect.width,
+                       face_rect.height);
+
+      painter.drawText(face_rect.x + face_rect.width / 2 - 30, face_rect.y + 15,
+                       "攻击人脸 ▼");
+    }
   }
 }
