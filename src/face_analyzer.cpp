@@ -83,7 +83,7 @@ void FaceAnalyzer::Process() {
       Notify<QualityAssessorEvent>(
           QualityAssessorEvent{pose_result, simg, QUALITY_ASSESSOR});
       if (pose_result.level == seeta::QualityLevel::LOW
-        ||isIntegrity) {
+        ||!isIntegrity) {
         spdlog::info("人脸分析器：非正脸。");
       } else {
         spdlog::info("人脸分析器：正脸。");
