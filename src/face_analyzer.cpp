@@ -70,7 +70,8 @@ void FaceAnalyzer::Process() {
           integrity_assessor_.check(simg, face_rect, points, 5);
       Notify<EventBase>(
           QualityAssessorEvent{integrity_result, simg, QUALITY_ASSESSOR});
-      if (integrity_result.level == seeta::QualityLevel::LOW) {
+      if (integrity_result.level == seeta::QualityLevel::LOW ||
+          integrity_result.score < 0.8) {
         spdlog::info("人脸分析器：人脸不完整。");
       } else {
         spdlog::info("人脸分析器：人脸完整。");
