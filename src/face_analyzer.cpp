@@ -75,6 +75,7 @@ void FaceAnalyzer::Process() {
       SeetaPointF points[5];
       landmarker_.mark(simg, face_rect, points);
       // 完整度评估
+      bool isIntegrity = true;
       seeta::QualityResult integrity_result =
           integrity_assessor_.check(simg, face_rect, points, 5);
       Notify<EventBase>(
@@ -82,6 +83,7 @@ void FaceAnalyzer::Process() {
       if (integrity_result.level == seeta::QualityLevel::LOW ||
           integrity_result.score < 0.8) {
         spdlog::info("人脸分析器：人脸不完整。");
+        isIntegrity = false;
       } else {
         spdlog::info("人脸分析器：人脸完整。");
       }
@@ -90,10 +92,11 @@ void FaceAnalyzer::Process() {
           pose_assessor_.check(simg, face_rect, points, 5);
       Notify<QualityAssessorEvent>(
           QualityAssessorEvent{pose_result, simg, QUALITY_ASSESSOR});
-      if (pose_result.level == seeta::QualityLevel::LOW) {
-        spdlog::info("人脸分析器：正脸。");
-      } else {
+      if (pose_result.level == seeta::QualityLevel::LOW
+        ||isIntegrity) {
         spdlog::info("人脸分析器：非正脸。");
+      } else {
+        spdlog::info("人脸分析器：正脸。");
       }
     }
 
