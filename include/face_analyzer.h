@@ -18,6 +18,7 @@
 #include "rpc_client.h"
 #include "treasure_chest/observer/core.h"
 #include "treasure_chest/producer_consumer/core.h"
+#include "seeta/QualityOfResolution.h"
 
 namespace arm_face_id {
 /**
@@ -105,6 +106,7 @@ class FaceAnalyzer : public treasure_chest::pattern::Subject,
   seeta::FaceLandmarker landmarker_;      // 人脸关键点定位器
   seeta::FaceAntiSpoofing antispoofing_;  // 活体检测器
 
+  seeta::QualityOfResolution resolution_assessor_;// 人脸分辨率评估器
   seeta::QualityOfClarity clarity_assessor_;      // 人脸清晰度评估器
   seeta::QualityOfIntegrity integrity_assessor_;  // 人脸完整度评估器
   seeta::QualityOfPose pose_assessor_;            // 人脸姿态评估器
