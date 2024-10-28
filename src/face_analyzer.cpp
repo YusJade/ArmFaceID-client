@@ -92,14 +92,25 @@ void FaceAnalyzer::Process() {
           pose_assessor_.check(simg, face_rect, points, 5);
       Notify<QualityAssessorEvent>(
           QualityAssessorEvent{pose_result, simg, QUALITY_ASSESSOR});
-      if (pose_result.level == seeta::QualityLevel::LOW
-        ||!isIntegrity) {
+      if (pose_result.level == seeta::QualityLevel::LOW || !isIntegrity) {
         spdlog::info("人脸分析器：非正脸。");
       } else {
         spdlog::info("人脸分析器：正脸。");
       }
-    }
 
+      // 分辨率评估
+      seeta::QualityResult resolution_result =
+          clarity_assessor_.check(simg, face_rect, points, 5);
+      Notify<QualityAssessorEvent>(
+          QualityAssessorEvent{resolution_result, simg, QUALITY_ASSESSOR});
+      if (resolution_result.level == seeta::QualityLevel::LOW) {
+        spdlog::info("人脸分析器：分辨率低。");
+      } else if (resolution_result.level == seeta::QualityLevel::MEDIUM) {
+        spdlog::info("人脸分析器：分辨率中等。");
+      } else {
+        spdlog::info("人脸分析器：分辨率高。");
+      }
+    }
     // 调用服务端的人脸识别服务
     if (rpc_ && need_recognize) {
       QImage qimage = utils::mat_to_qimage(frame);
