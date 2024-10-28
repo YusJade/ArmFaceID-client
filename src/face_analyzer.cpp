@@ -80,7 +80,7 @@ void FaceAnalyzer::Process() {
       // 姿态评估
       seeta::QualityResult pose_result =
           pose_assessor_.check(simg, face_rect, points, 5);
-      Notify<QualityAssessorEvent>(
+      Notify<EventBase>(
           QualityAssessorEvent{pose_result, simg, QUALITY_ASSESSOR});
       if (pose_result.level == seeta::QualityLevel::LOW || !isIntegrity) {
         spdlog::info("人脸分析器：非正脸。");
@@ -90,8 +90,8 @@ void FaceAnalyzer::Process() {
 
       // 分辨率评估
       seeta::QualityResult resolution_result =
-          clarity_assessor_.check(simg, face_rect, points, 5);
-      Notify<QualityAssessorEvent>(
+          resolution_assessor_.check(simg, face_rect, points, 5);
+      Notify<EventBase>(
           QualityAssessorEvent{resolution_result, simg, QUALITY_ASSESSOR});
       if (resolution_result.level == seeta::QualityLevel::LOW) {
         spdlog::info("人脸分析器：分辨率低。");
@@ -99,6 +99,19 @@ void FaceAnalyzer::Process() {
         spdlog::info("人脸分析器：分辨率中等。");
       } else {
         spdlog::info("人脸分析器：分辨率高。");
+      }
+
+      // 清晰度评估
+      seeta::QualityResult clarity_result =
+          clarity_assessor_.check(simg, face_rect, points, 5);
+      Notify<EventBase>(
+          QualityAssessorEvent{clarity_result, simg, QUALITY_ASSESSOR});
+      if (clarity_result.level == seeta::QualityLevel::LOW) {
+        spdlog::info("人脸分析器：清晰度低。");
+      } else if (clarity_result.level == seeta::QualityLevel::MEDIUM) {
+        spdlog::info("人脸分析器：清晰度中等。");
+      } else {
+        spdlog::info("人脸分析器：清晰度高。");
       }
     }
     // 调用服务端的人脸识别服务
