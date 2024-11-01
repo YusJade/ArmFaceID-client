@@ -53,7 +53,7 @@ add_executable(armfaceid-client src/main.cpp src/camera.cpp
                                 src/face_analyzer.cpp)
 
 target_link_libraries(
-  armfaceid-client PUBLIC absl::flags absl::flags_parse absl::flags_usage
+  armfaceid-client PUBLIC absl::flags absl::flags_parse absl::flags_usage rpc
                           spdlog::spdlog ${Qt_LIBRARIES} ${OpenCV_LIBS}
                           ${SeetaFaceDetector_LIBRARY} ${SeetaFaceLandmarker_LIBRARY}
                           ${SeetaFaceAntiSpoofingX_LIBRARY} ${SeetaQualityAssessor_LIBRARY})

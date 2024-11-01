@@ -7,11 +7,15 @@
 #include <absl/flags/flag.h>
 #include <absl/flags/parse.h>
 #include <absl/flags/usage.h>
+#include <fmt/core.h>
+#include <grpcpp/create_channel.h>
+#include <grpcpp/security/credentials.h>
 #include <opencv2/core/mat.hpp>
 
 #include "Common/Struct.h"
 #include "camera.h"
 #include "face_analyzer.h"
+#include "grpc/include/rpc_client.h"
 #include "qt_gui/qt_gui.h"
 
 ABSL_FLAG(int, camera_index, 0, "必需：本地摄像头 index");
@@ -19,8 +23,8 @@ ABSL_FLAG(bool, net_camera, true, "可选：是否启用网络摄像头");
 ABSL_FLAG(std::string, camera_url, "http://localhost:3306/",
           "可选：网络摄像头 url");
 ABSL_FLAG(std::string, model_dir, "./", "必需： SeetaFace6 的模型路径");
-ABSL_FLAG(std::string, server_addr, "http://localhost:12345/",
-          "必需：服务器地址");
+ABSL_FLAG(std::string, server_ip, "face.yusjade.world", "必需：服务器 ip");
+ABSL_FLAG(std::string, server_port, "80", "必需：服务器 port");
 
 int main(int argc, char *argv[]) {
   // 解析命令行参数，配置各个模块的设置
@@ -30,11 +34,20 @@ int main(int argc, char *argv[]) {
   int camera_index = absl::GetFlag(FLAGS_camera_index);
   bool enable_net_camera = absl::GetFlag(FLAGS_net_camera);
   std::string camera_url = absl::GetFlag(FLAGS_camera_url);
-  std::string server_addr = absl::GetFlag(FLAGS_server_addr);
+  std::string server_ip = absl::GetFlag(FLAGS_server_ip);
+  std::string server_port = absl::GetFlag(FLAGS_server_port);
   std::string model_dir = absl::GetFlag(FLAGS_model_dir);
 
   // TODO: 初始化 gRPC 服务器
-
+  std::string addr = fmt::format("{}:{}", server_ip, server_port);
+  auto rpc_client = std::make_shared<arm_face_id::RpcClient>(
+      grpc::CreateChannel(addr, grpc::InsecureChannelCredentials()));
+  std::thread client_thread(&arm_face_id::RpcClient::ProcessAsyncReply,
+                            rpc_client.get());
+  client_thread.detach();
+  //   while (true) {
+  //     rpc_client.RecognizeFace();
+  //   }
   /*----------------------------*/
 
   // 初始化 摄像头与 SeetaFace 模块
@@ -62,6 +75,7 @@ int main(int argc, char *argv[]) {
                                "sf3.0_models/fas_second.csta"},
       seeta::ModelSetting::CPU);
   arm_face_id::FaceAnalyzer face_analyzer(analyzer_settings, frame_queue);
+  face_analyzer.SetRpcClient(rpc_client);
 
   std::thread analyzer_thread(&arm_face_id::FaceAnalyzer::Process,
                               &face_analyzer);

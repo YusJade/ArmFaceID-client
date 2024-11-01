@@ -1,5 +1,10 @@
 #include "face_analyzer.h"
 
+#include <qimage.h>
+#include <qregion.h>
+
+#include <QIODevice>
+
 #include <opencv2/core/mat.hpp>
 #include <spdlog/spdlog.h>
 
@@ -8,6 +13,7 @@
 #include "FaceAntiSpoofing.h"
 #include "QualityOfIntegrity.h"
 #include "QualityStructure.h"
+#include "utils/base.h"
 
 using namespace arm_face_id;
 
@@ -21,6 +27,7 @@ FaceAnalyzer::FaceAnalyzer(const FaceAnalyzer::Settings &settings,
 }
 
 void FaceAnalyzer::Process() {
+  bool need_recognize = true;
   while (true) {
     cv::Mat frame = GetTask();
     SeetaImageData simg{frame.cols, frame.rows, frame.channels(), frame.data};
@@ -30,7 +37,10 @@ void FaceAnalyzer::Process() {
     if (faces.size > 0) {
       Notify<EventBase>(DetectorEvent{faces, simg, DETECTOR});
     }
-    if (faces.size == 0) continue;
+    if (faces.size == 0) {
+      need_recognize = true;
+      continue;
+    }
     spdlog::info("人脸分析器：检测到 {} 张人脸。", faces.size);
 
     // 活体检测
@@ -77,5 +87,14 @@ void FaceAnalyzer::Process() {
     }
 
     // 调用服务端的人脸识别服务
+    if (rpc_ && need_recognize) {
+      QImage qimage = utils::mat_to_qimage(frame);
+      QByteArray byte_arr;
+      QDataStream stream(&byte_arr, QIODevice::WriteOnly);
+      stream << qimage;
+      std::string img_bytes(byte_arr.data(), byte_arr.size());
+      rpc_->RecognizeFace(img_bytes);
+      need_recognize = false;
+    }
   }
 }

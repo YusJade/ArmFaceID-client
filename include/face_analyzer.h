@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <vector>
 
 #include <opencv2/core/mat.hpp>
@@ -14,6 +15,7 @@
 #include "Common/CStruct.h"
 #include "Common/Struct.h"
 #include "QualityStructure.h"
+#include "rpc_client.h"
 #include "treasure_chest/observer/core.h"
 #include "treasure_chest/producer_consumer/core.h"
 
@@ -94,6 +96,10 @@ class FaceAnalyzer : public treasure_chest::pattern::Subject,
    */
   void Process();
 
+  void SetRpcClient(std::shared_ptr<RpcClient> rpc_client) {
+    rpc_ = rpc_client;
+  }
+
  private:
   seeta::FaceDetector detector_;          // 人脸检测器
   seeta::FaceLandmarker landmarker_;      // 人脸关键点定位器
@@ -102,6 +108,8 @@ class FaceAnalyzer : public treasure_chest::pattern::Subject,
   seeta::QualityOfClarity clarity_assessor_;      // 人脸清晰度评估器
   seeta::QualityOfIntegrity integrity_assessor_;  // 人脸完整度评估器
   seeta::QualityOfPose pose_assessor_;            // 人脸姿态评估器
+
+  std::shared_ptr<RpcClient> rpc_;
 };
 
 }  // namespace arm_face_id
