@@ -8,10 +8,10 @@
 #include <seeta/QualityOfIntegrity.h>
 #include <seeta/QualityOfPose.h>
 
-#include "CFaceInfo.h"
-#include "Common/CStruct.h"
-#include "Common/Struct.h"
-#include "QualityStructure.h"
+#include "seeta/CFaceInfo.h"
+#include "seeta/Common/CStruct.h"
+#include "seeta/Common/Struct.h"
+#include "seeta/QualityStructure.h"
 #include "treasure_chest/observer/core.h"
 #include "treasure_chest/producer_consumer/core.h"
 
@@ -36,10 +36,16 @@ class FaceAnalyzer : public treasure_chest::pattern::Subject,
   struct EventBase {
     const SeetaImageData &simg;
     const EventType type;
+
+    EventBase(const SeetaImageData &_simg, const EventType _type)
+        : simg(_simg), type(_type) {}
   };
 
   struct DetectorEvent : EventBase {
     const SeetaFaceInfoArray &faces;
+    DetectorEvent(const SeetaFaceInfoArray &_faces, const SeetaImageData &_simg,
+                  const EventType _type)
+        : faces(_faces), EventBase(_simg, _type) {}
   };
 
   struct LandmarkerEvent : EventBase {};
