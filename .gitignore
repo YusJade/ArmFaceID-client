@@ -7,3 +7,5 @@ path_config.cmake
 *.tar.*
 /*build*
 .idea
+/.idea
+CMakeLists.txt

@@ -32,7 +32,7 @@ find_package(SeetaQualityAssessor REQUIRED)
 find_package(OpenCV CONFIG REQUIRED)
 find_package(absl CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
-find_package(Qt6 COMPONENTS Core Widgets CONFIG)
+ find_package(Qt6 COMPONENTS Core Widgets CONFIG)
 
 if(${Qt6_FOUND})
   set(Qt_LIBRARIES Qt6::Core Qt6::Widgets)
@@ -50,7 +50,8 @@ message(STATUS "Qt5_FOUND: ${Qt5_FOUND}")
 
 add_executable(armfaceid-client src/main.cpp src/camera.cpp 
                                 src/qt_gui/qt_gui.cpp src/utils/base.cpp
-                                src/face_analyzer.cpp)
+                                src/face_analyzer.cpp
+)
 
 target_link_libraries(
   armfaceid-client PUBLIC absl::flags absl::flags_parse absl::flags_usage rpc
