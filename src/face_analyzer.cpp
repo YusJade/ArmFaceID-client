@@ -3,9 +3,9 @@
 #include <opencv2/core/mat.hpp>
 #include <spdlog/spdlog.h>
 
-#include "CFaceInfo.h"
-#include "Common/CStruct.h"
-#include "FaceAntiSpoofing.h"
+#include "seeta/CFaceInfo.h"
+#include "seeta/Common/CStruct.h"
+#include "seeta/FaceAntiSpoofing.h"
 
 using namespace arm_face_id;
 

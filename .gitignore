@@ -5,3 +5,7 @@
 /sf3.0_models/*
 path_config.cmake
 *.tar.*
+/*build*
+/.idea
+.gitignore
+CMakeLists.txt

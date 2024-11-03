@@ -1,10 +1,11 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.20)
 
 project(armfaceid-client)
 
 set(CMAKE_BUILD_TYPE DEBUG)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTOMOC ON)
 
 include_directories(include third_party third_party/treasure_chest)
@@ -14,8 +15,8 @@ if(EXISTS "${CMAKE_SOURCE_DIR}/path_config.cmake")
   include(path_config.cmake)
 endif()
 
-set(CMAKE_MODULE_PATH $ENV{SeetaFace6_DIR}/cmake)
-message(STATUS "CMAKE_MODULE_PATH: ${SeetaFace6_DIR}/cmake")
+set(CMAKE_MODULE_PATH /home/lyq/workspace/SeetaFace6/cmake ${SeetaFace6_DIR}/cmake)
+message(STATUS "CMAKE_MODULE_PATH: ${CMAKE_MODULE_PATH}")
 
 set(SeetaFaceDetector_ROOT_DIR $ENV{SeetaFace6_DIR})
 set(SeetaFaceLandmarker_ROOT_DIR $ENV{SeetaFace6_DIR})
@@ -28,10 +29,11 @@ find_package(SeetaFaceLandmarker REQUIRED)
 find_package(SeetaFaceAntiSpoofingX REQUIRED)
 find_package(SeetaQualityAssessor REQUIRED)
 
+
 find_package(OpenCV CONFIG REQUIRED)
 find_package(absl CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
-find_package(Qt6 COMPONENTS Core Widgets CONFIG)
+ find_package(Qt6 COMPONENTS Core Widgets CONFIG)
 
 if(${Qt6_FOUND})
   set(Qt_LIBRARIES Qt6::Core Qt6::Widgets)
@@ -49,7 +51,8 @@ message(STATUS "Qt5_FOUND: ${Qt5_FOUND}")
 
 add_executable(armfaceid-client src/main.cpp src/camera.cpp 
                                 src/qt_gui/qt_gui.cpp src/utils/base.cpp
-                                src/face_analyzer.cpp)
+                                src/face_analyzer.cpp
+)
 
 target_link_libraries(
   armfaceid-client PUBLIC absl::flags absl::flags_parse absl::flags_usage
