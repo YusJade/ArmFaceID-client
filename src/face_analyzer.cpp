@@ -25,7 +25,7 @@ void FaceAnalyzer::Process() {
 
     // 人脸检测
     SeetaFaceInfoArray faces = detector_.detect(simg);
-    Notify<EventBase>(DetectorEvent{simg, DETECTOR, faces});
+    Notify<EventBase>(DetectorEvent{faces, simg, DETECTOR});
     if (faces.size == 0) continue;
     spdlog::info("人脸分析器：检测到 {} 张人脸。", faces.size);
     // 活体检测
