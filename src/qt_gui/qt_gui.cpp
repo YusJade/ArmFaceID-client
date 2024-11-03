@@ -19,6 +19,9 @@
 #include "Common/CStruct.h"
 #include "FaceAntiSpoofing.h"
 #include "QualityStructure.h"
+
+// 包含了必要的 Qt 组件
+
 #include "face_analyzer.h"
 #include "qt_gui/qt_gui.h"
 #include "utils/base.h"
@@ -44,12 +47,12 @@ void QtGUI::InitWindow() {
   lb_bg->setObjectName("lb_bg");
   lb_bg->setGeometry(QRect(-20, -10, 951, 631));
   lb_bg->setAutoFillBackground(false);
-  lb_bg->setPixmap(QPixmap(QString::fromUtf8("_res/bg.png")));
+  lb_bg->setPixmap(QPixmap(QString::fromUtf8("assets/bg.png")));
   lb_bg->setScaledContents(true);
   lb_ico = new QLabel(centralwidget);
   lb_ico->setObjectName("lb_ico");
   lb_ico->setGeometry(QRect(30, 30, 71, 61));
-  lb_ico->setPixmap(QPixmap(QString::fromUtf8("_res/fr2.ico")));
+  lb_ico->setPixmap(QPixmap(QString::fromUtf8("assets/fr2.ico")));
   tw_main = new QTabWidget(centralwidget);
   tw_main->setObjectName("tw_main");
   tw_main->setGeometry(QRect(100, 40, 771, 541));
@@ -85,12 +88,12 @@ void QtGUI::InitWindow() {
   tab_func->setObjectName("tab_func");
   bg_camera = new QGroupBox(tab_func);
   bg_camera->setObjectName("bg_camera");
-  bg_camera->setGeometry(QRect(10, 10, 521, 471));
+  // bg_camera->setGeometry(QRect(10, 10, 521, 471));
   bg_camera->setStyleSheet(QString::fromUtf8("color:white"));
 
   // add layout for bg
   QVBoxLayout* gb_camera_layout = new QVBoxLayout(bg_camera);
-  gb_camera_layout->setContentsMargins(0, 0, 0, 0);
+  gb_camera_layout->setContentsMargins(10, 10, 10, 10);
 
   camera_frame_label_ = new QLabel("camera");
   camera_frame_label_->setFixedSize(640, 400);
