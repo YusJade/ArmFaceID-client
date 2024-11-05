@@ -56,8 +56,7 @@ cmake --build ./build
 - 使用某种优化方法，降低向服务端发送人脸识别请求的频率。
 
 <img src="./assets/frame.png" width=70%>
-
-
+</br>
 ### 目标 1：使用 `gRPC` 框架进行网络通信
 
 **负责开发：**
