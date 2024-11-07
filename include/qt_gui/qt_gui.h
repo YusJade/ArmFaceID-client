@@ -39,7 +39,9 @@ class QtGUI
   QGridLayout *main_grid_layout_ = nullptr;
 
   // 用于显示信息通知的图像。
-  QPixmap info_notification_pixmap_;
+  // QPixmap info_notification_pixmap_;
+  QPixmap faces_notification_pixmap_;
+  QPixmap antispoofing_notification_pixmap_;
 
   // 图像资源
   QLabel *lb_bg = nullptr;
