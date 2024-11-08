@@ -156,7 +156,7 @@ class QtGUI
 
     QWidget *titleWidget = new QWidget();
     titleWidget->setLayout(hLayout);
-    titleWidget->setStyleSheet("background-color: blue;");
+    titleWidget->setStyleSheet("background-color: transparent;");
 
     // 在窗口的右上角添加标题栏
     main_grid_layout_->addWidget(titleWidget, 0, 1, 1, 1,

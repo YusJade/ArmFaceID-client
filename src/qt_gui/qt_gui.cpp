@@ -41,7 +41,7 @@ void QtGUI::InitWindow() {
   lb_bg->setPixmap(QPixmap("assets/bg.png"));
   lb_bg->setScaledContents(true);
   // lb_bg->setContentsMargins(0, 0, 0, 0);
-  lb_bg->setStyleSheet("background-color:red");
+  // lb_bg->setStyleSheet("background-color:red");
   main_grid_layout_->addWidget(lb_bg, 0, 0, 1, 1);
 
   // 创建子容器
