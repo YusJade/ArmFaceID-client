@@ -13,8 +13,11 @@
 #include <QLineEdit>
 #include <QMainWindow>
 #include <QMenuBar>
+#include <QPainter>
 #include <QPushButton>
+#include <QResizeEvent>
 #include <QTextEdit>
+#include <cstddef>
 
 #include <opencv2/core/mat.hpp>
 
@@ -24,6 +27,25 @@
 #include "qt_gui/notification.h"
 
 namespace arm_face_id {
+
+// 定义label类（动态幕布）
+class ResizableLabel : public QLabel {
+ public:
+  ResizableLabel(QWidget *parent = nullptr) : QLabel(parent) {}
+
+ protected:
+  void resizeEvent(QResizeEvent *event) override {
+    QLabel::resizeEvent(event);
+    QSize newSize = event->size();
+    QPixmap pixmap_cam(newSize);
+    pixmap_cam.fill(Qt::transparent);
+    QPainter painter_cam(&pixmap_cam);
+    painter_cam.setBrush(Qt::black);
+    painter_cam.drawRect(0, 0, pixmap_cam.width(), pixmap_cam.height());
+    this->setPixmap(pixmap_cam);
+  }
+};
+// 定义QtGUI类
 class QtGUI
     : public QMainWindow,
       public treasure_chest::pattern::Observer<cv::Mat>,
@@ -39,23 +61,21 @@ class QtGUI
   QGridLayout *main_grid_layout_ = nullptr;
 
   // 用于显示信息通知的图像。
-  // QPixmap info_notification_pixmap_;
-  QPixmap faces_notification_pixmap_;
-  QPixmap antispoofing_notification_pixmap_;
+  QPixmap info_notification_pixmap_;
 
-  // 图像资源
+  // res 资源
   QLabel *lb_bg = nullptr;
   QLabel *lb_ico = nullptr;
 
   // menu 栏
-  QMenuBar *menubar;
-  QMenu *menu_0, *menu_1;
-  QAction *menu_0_action_0, *menu_0_action_1, *menu_1_action_0;
+  // QMenuBar *menubar;
+  // QMenu *menu_0, *menu_1;
+  // QAction *menu_0_action_0, *menu_0_action_1, *menu_1_action_0;
 
   // cam 栏
   QVBoxLayout *cam_vbox_layout = nullptr;
   QGroupBox *gb_camera = nullptr;
-  QLabel *lb_camera = nullptr;
+  ResizableLabel *lb_camera = nullptr;
   QGroupBox *gb_info = nullptr;
 
   // info 栏

@@ -16,29 +16,35 @@
 #include "face_analyzer.h"
 #include "qt_gui/notification.h"
 #include "utils/base.h"
-
 using namespace arm_face_id;
 
-constexpr int flush_notification_cnt = 10;
-
 void QtGUI::InitWindow() {
+  // 设置大小策略
+  QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+  // 主窗口
   centralwidget = new QWidget;
   setCentralWidget(centralwidget);
   main_grid_layout_ = new QGridLayout(centralwidget);
-
-  // 设置大小策略
-  QSizePolicy sizePolicy(QSizePolicy::Policy::Expanding,
-                         QSizePolicy::Policy::Expanding);
+  main_grid_layout_->setContentsMargins(0, 0, 0, 0);
   centralwidget->setSizePolicy(sizePolicy);
-  centralwidget->setMinimumSize(400, 200);
-  centralwidget->setStyleSheet(QString::fromUtf8("background-color:#272b4c"));
-  // // 设置背景图片
-  // lb_bg = new QLabel(centralwidget);
-  // main_grid_layout_->addWidget(lb_bg, 0, 0, 1, 2);
-  // lb_bg->setSizePolicy(sizePolicy);
-  // lb_bg->setPixmap(QPixmap(QString::fromUtf8("assets/bg.png")));
-  // lb_bg->setScaledContents(true);
-  // lb_bg->setMinimumSize(380, 180);
+  centralwidget->setMinimumSize(800, 400);
+  // centralwidget->setStyleSheet(QString::fromUtf8("background-color:#272b4c"));
+
+  // 背景标签
+  lb_bg = new QLabel(centralwidget);
+  lb_bg->setPixmap(QPixmap(QString::fromUtf8("assets/bg.png")));
+  lb_bg->setScaledContents(true);
+  // lb_bg->setContentsMargins(0, 0, 0, 0);
+  lb_bg->setStyleSheet(QString::fromUtf8("background-color:red"));
+  main_grid_layout_->addWidget(lb_bg, 0, 0, 1, 1);
+
+  // 创建子容器
+  QWidget* bgwidget = new QWidget(centralwidget);
+  QGridLayout* bg_grid_layout = new QGridLayout(bgwidget);
+  bgwidget->setLayout(bg_grid_layout);
+  main_grid_layout_->addWidget(bgwidget, 0, 0, 1, 1);
+  bg_grid_layout->setContentsMargins(40, 80, 40, 20);
+  bgwidget->raise();
 
   // menu栏
   // menubar = new QMenuBar(centralwidget);
@@ -60,26 +66,25 @@ void QtGUI::InitWindow() {
 
   // cam 栏目
   gb_camera = new QGroupBox(lb_bg);
-  main_grid_layout_->addWidget(gb_camera, 0, 0);
-  main_grid_layout_->setColumnStretch(0, 2);
+  bg_grid_layout->addWidget(gb_camera, 0, 0);
+  bg_grid_layout->setColumnStretch(0, 2);
   cam_vbox_layout = new QVBoxLayout(gb_camera);
-  // cam 幕布
-  lb_camera = new QLabel;
+  lb_camera = new ResizableLabel;
   cam_vbox_layout->addWidget(lb_camera);
-  QPixmap pixmap_cam(lb_camera->size());
-  QPainter painter_cam(&pixmap_cam);
-  painter_cam.setBrush(Qt::blue);
-  painter_cam.drawRect(0, 0, pixmap_cam.width(), pixmap_cam.height());
-  lb_camera->setPixmap(pixmap_cam);
-  faces_notification_pixmap_ = QPixmap(lb_camera->size());
-  faces_notification_pixmap_.fill(Qt::transparent);
-  antispoofing_notification_pixmap_ = QPixmap(lb_camera->size());
-  antispoofing_notification_pixmap_.fill(Qt::transparent);
+
+  QPixmap info_notification_pixmap_(lb_camera->size());
+  info_notification_pixmap_.fill(Qt::transparent);
+
+  // QPixmap pixmap_cam(lb_camera->size());
+  // QPainter painter_cam(&pixmap_cam);
+  // painter_cam.setBrush(Qt::blue);
+  // painter_cam.drawRect(0, 0, pixmap_cam.width(), pixmap_cam.height());
+  // lb_camera->setPixmap(pixmap_cam);
 
   // info 栏目
   gb_info = new QGroupBox(lb_bg);
-  main_grid_layout_->addWidget(gb_info, 0, 1);
-  main_grid_layout_->setColumnStretch(1, 1);
+  bg_grid_layout->addWidget(gb_info, 0, 1);
+  bg_grid_layout->setColumnStretch(1, 1);
   gb_info->setStyleSheet(QString::fromUtf8("color:white"));
   info_grid_layout = new QGridLayout(gb_info);
   // 显示用户个性头像
@@ -138,7 +143,7 @@ void QtGUI::InitWindow() {
   //     "QPushButton:hover{background:#7FFFD4;}\n"
   //     "QPushButton:pressed{border: 1px solid #3C3C3C!important;}"));
 
-  // 赋名
+  // 备注
   gb_info->setTitle(
       QCoreApplication::translate("MainWindow", "Information", nullptr));
   lb_username->setText(
@@ -158,74 +163,45 @@ void QtGUI::InitWindow() {
   //     QCoreApplication::translate("MainWindow", "...", nullptr));
 
   // 测试按钮
-  nf1 = new Notification(centralwidget);
+  nf1 = new Notification(bgwidget);
   connect(pb_verify1, &QPushButton::clicked, this, [&]() {
     nf1->Push(NotifyType::Notify_Type_Warning, NotifyPosition::Pos_Top_Left,
               "Warning", "The face-quality-detection failed!", 2000);
   });
   pb_verify1->move(200, 50);
-  nf2 = new Notification(centralwidget);
+  nf2 = new Notification(bgwidget);
   connect(pb_verify2, &QPushButton::clicked, this, [&]() {
     nf2->Push(NotifyType::Notify_Type_Error, NotifyPosition::Pos_Top_Left,
-              "Error", "The liveness-detection failed!", 1000);
+              "Error", "The liveness-detection failed!", 2000);
   });
   pb_verify2->move(200, 50);
 }
 
 void QtGUI::OnNotify(const cv::Mat& message) {
-  // 将信息提示帧与画面帧叠加
+  QSize lb_size = lb_camera->size();
   QPixmap frame = QPixmap::fromImage(utils::mat_to_qimage(message));
+  frame = frame.scaled(lb_size, Qt::KeepAspectRatio, Qt::SmoothTransformation);
   QPainter painter(&frame);
-  painter.drawPixmap(0, 0, faces_notification_pixmap_);
-  painter.drawPixmap(0, 0, antispoofing_notification_pixmap_);
+  painter.drawPixmap(0, 0, info_notification_pixmap_);
   lb_camera->setPixmap(frame);
-
-  ++notification_delay_cnter;
-  if (notification_delay_cnter == flush_notification_cnt) {
-    faces_notification_pixmap_.fill(Qt::transparent);
-    antispoofing_notification_pixmap_.fill(Qt::transparent);
-  }
 }
 
 void QtGUI::OnNotify(const FaceAnalyzer::EventBase& message) {
-  notification_delay_cnter = 0;
-  // 通过 EventBase 的 type 转换为具体的信息类型
   if (message.type == FaceAnalyzer::DETECTOR) {
     const auto& event =
         static_cast<const FaceAnalyzer::DetectorEvent&>(message);
-    // 绘制人脸检测框
-    // QPixmap pixmap = camera_frame_label_->pixmap();
-    // 绘制并缓存信息提示帧，待与画面帧叠加，避免丢失信息提示帧
-    faces_notification_pixmap_.fill(Qt::transparent);
-    QPainter painter(&faces_notification_pixmap_);
-    painter.setPen(Qt::green);
+    info_notification_pixmap_.fill(Qt::transparent);
+    QPainter painter(&info_notification_pixmap_);
+    painter.setPen(Qt::yellow);
     for (int i = 0; i < event.faces.size; i++) {
       auto& face = event.faces.data[i];
       auto& face_rect = event.faces.data[i].pos;
       painter.drawRect(face_rect.x, face_rect.y, face_rect.width,
                        face_rect.height);
-
       painter.drawText(face_rect.x + 5, face_rect.y + 15,
-                       "编号：" + QString::number(i));
+                       "code: " + QString::number(i));
       painter.drawText(face_rect.x + 5, face_rect.y + face_rect.height - 5,
-                       "分数：" + QString::number(face.score));
-    }
-    // camera_frame_label_->setPixmap(pixmap);
-  } else if (message.type == FaceAnalyzer::ANTISPOOFING) {
-    const auto& event =
-        static_cast<const FaceAnalyzer::AntiSpoofingEvent&>(message);
-
-    QPainter painter(&antispoofing_notification_pixmap_);
-    antispoofing_notification_pixmap_.fill(Qt::transparent);
-    for (auto info : event.infos) {
-      if (info.status == seeta::FaceAntiSpoofing::REAL) continue;
-      SeetaRect face_rect = info.face_info.pos;
-      painter.setPen(QPen(Qt::red, 2));
-      painter.drawRect(face_rect.x, face_rect.y, face_rect.width,
-                       face_rect.height);
-
-      painter.drawText(face_rect.x + face_rect.width / 2 - 30, face_rect.y + 15,
-                       "攻击人脸 ▼");
+                       "score: " + QString::number(face.score));
     }
   }
 }
