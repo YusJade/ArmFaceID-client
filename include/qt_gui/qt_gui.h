@@ -2,6 +2,7 @@
 #include <qlabel.h>
 #include <qmainwindow.h>
 #include <qpixmap.h>
+#include <qpoint.h>
 #include <qpushbutton.h>
 #include <qwidget.h>
 
@@ -45,6 +46,7 @@ class ResizableLabel : public QLabel {
     this->setPixmap(pixmap_cam);
   }
 };
+
 // 定义QtGUI类
 class QtGUI
     : public QMainWindow,
@@ -53,31 +55,49 @@ class QtGUI
  public:
   QtGUI() = default;
   void InitWindow();
+  bool event1(QEvent *event);
+  void mousePressEvent(QMouseEvent *event);
+  void mouseMoveEvent(QMouseEvent *event);
+  void updateRegion(QMouseEvent *event);
+  void resizeRegion(int marginTop, int marginBottom, int marginLeft,
+                    int marginRight);
+  void mouseReleaseEvent(QMouseEvent *event);
+  void leaveEvent(QEvent *event);
   void OnNotify(const cv::Mat &message) override;
   void OnNotify(const FaceAnalyzer::EventBase &message) override;
 
  private:
+  //主布局
+  bool isMaximized = false;
+  bool m_bIsPressed = false;
+  bool m_bIsResizing = false;
+  bool m_bIsDoublePressed = false;
+  QPointF m_pressPoint;
+  QPointF m_movePoint;
+  enum ResizeDirection {
+    NONE = 0,
+    BOTTOMRIGHT,
+    TOPRIGHT,
+    TOPLEFT,
+    BOTTOMLEFT,
+    DOWN,
+    LEFT,
+    RIGHT,
+    UP
+  };
+  ResizeDirection m_direction = NONE;
+
   QWidget *centralwidget = nullptr;
   QGridLayout *main_grid_layout_ = nullptr;
-
-  // 用于显示信息通知的图像。
-  QPixmap info_notification_pixmap_;
-
   // res 资源
   QLabel *lb_bg = nullptr;
   QLabel *lb_ico = nullptr;
-
-  // menu 栏
-  // QMenuBar *menubar;
-  // QMenu *menu_0, *menu_1;
-  // QAction *menu_0_action_0, *menu_0_action_1, *menu_1_action_0;
-
   // cam 栏
   QVBoxLayout *cam_vbox_layout = nullptr;
   QGroupBox *gb_camera = nullptr;
   ResizableLabel *lb_camera = nullptr;
   QGroupBox *gb_info = nullptr;
-
+  QPixmap info_notification_pixmap_;
   // info 栏
   QGridLayout *info_grid_layout = nullptr;
   QLabel *lb_headshot = nullptr;
@@ -91,8 +111,56 @@ class QtGUI
   QPushButton *pb_verify2 = nullptr;
   Notification *nf1, *nf2;
 
-  // 关闭|最小化按钮
-  QPushButton *pb_close = nullptr;
-  QPushButton *pb_hide = nullptr;
+  void ControlButton() {
+    // 创建关闭按钮
+    QPushButton *closeButton = new QPushButton("X");
+    closeButton->setFixedSize(30, 30);
+    closeButton->setStyleSheet(
+        "background-color: red; border: none; color: white;");
+    connect(closeButton, &QPushButton::clicked, this, &QWidget::close);
+    // 创建最小化按钮
+    QPushButton *minimizeButton = new QPushButton("-");
+    minimizeButton->setFixedSize(30, 30);
+    minimizeButton->setStyleSheet(
+        "background-color: yellow; border: none; color: black;");
+    connect(minimizeButton, &QPushButton::clicked, this,
+            &QWidget::showMinimized);
+    // 创建最大化按钮
+    QPushButton *maximizeButton = new QPushButton("□");
+    maximizeButton->setFixedSize(30, 30);
+    maximizeButton->setStyleSheet(
+        "background-color: green; border: none; color: white;");
+    // 连接最大化按钮的点击信号到自定义的槽
+    connect(maximizeButton, &QPushButton::clicked, this,
+            [this, maximizeButton]() {
+              if (isMaximized) {
+                this->showNormal();
+                maximizeButton->setText("□");
+                maximizeButton->setStyleSheet(
+                    "background-color: green; border: none; color: white;");
+              } else {
+                this->showMaximized();
+                maximizeButton->setText("⛶");
+                maximizeButton->setStyleSheet(
+                    "background-color: blue; border: none; color: white;");
+              }
+              isMaximized = !isMaximized;
+            });
+    // 创建水平布局，并添加按钮
+    QHBoxLayout *hLayout = new QHBoxLayout();
+    hLayout->addWidget(minimizeButton);
+    hLayout->addWidget(maximizeButton);
+    hLayout->addWidget(closeButton);
+
+    // 创建一个包含按钮的 QWidget 并设置为标题栏
+
+    QWidget *titleWidget = new QWidget();
+    titleWidget->setLayout(hLayout);
+    titleWidget->setStyleSheet("background-color: blue;");
+
+    // 在窗口的右上角添加标题栏
+    main_grid_layout_->addWidget(titleWidget, 0, 1, 1, 1,
+                                 Qt::AlignTop | Qt::AlignRight);
+  }
 };
 }  // namespace arm_face_id
