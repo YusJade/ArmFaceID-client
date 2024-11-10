@@ -17,6 +17,7 @@ namespace arm_face_id {
 class QtGUI
     : public QMainWindow,
       public treasure_chest::pattern::Observer<cv::Mat>,
+      public treasure_chest::pattern::Observer<FaceAnalyzer::AnalyzeMsg>,
       public treasure_chest::pattern::Observer<FaceAnalyzer::EventBase> {
  public:
   QtGUI() = default;
@@ -25,6 +26,7 @@ class QtGUI
 
   void OnNotify(const cv::Mat& message) override;
   void OnNotify(const FaceAnalyzer::EventBase& message) override;
+  void OnNotify(const FaceAnalyzer::AnalyzeMsg& message) override;
 
  private:
   QWidget* main_widget_ = nullptr;

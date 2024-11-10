@@ -90,6 +90,7 @@ int main(int argc, char *argv[]) {
   qt_gui->show();
   camera.AddObserver<cv::Mat>(qt_gui);
   face_analyzer.AddObserver<arm_face_id::FaceAnalyzer::EventBase>(qt_gui);
+  face_analyzer.AddObserver<arm_face_id::FaceAnalyzer::AnalyzeMsg>(qt_gui);
   /*----------------------------*/
 
   return app.exec();
