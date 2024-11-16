@@ -4,7 +4,8 @@ project(armfaceid-client)
 
 set(CMAKE_BUILD_TYPE DEBUG)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTOMOC ON)
 
 include_directories(include third_party third_party/treasure_chest)
@@ -32,14 +33,22 @@ find_package(SeetaQualityAssessor REQUIRED)
 find_package(OpenCV CONFIG REQUIRED)
 find_package(absl CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
- find_package(Qt6 COMPONENTS Core Widgets CONFIG)
+find_package(Qt6 COMPONENTS Core Widgets CONFIG)
+set(SOURCES 
+  src/main.cpp src/camera.cpp 
+  src/qt_gui/qt_gui.cpp src/utils/base.cpp
+  src/face_analyzer.cpp
+  src/qt_gui/notification.cpp)
 
+ 
 if(${Qt6_FOUND})
   set(Qt_LIBRARIES Qt6::Core Qt6::Widgets)
+  qt_wrap_cpp(SOURCES include/qt_gui/notification.h)
 else()
   find_package(Qt5 COMPONENTS Core Widgets CONFIG REQUIRED)
   if(${Qt5_FOUND})
     set(Qt_LIBRARIES Qt5::Core Qt5::Widgets)
+    qt5_wrap_cpp(SOURCES include/qt_gui/notification.h)
   else()
     message(STATUS "找不到可用的 Qt !")
   endif()
@@ -48,10 +57,8 @@ endif()
 message(STATUS "Qt6_FOUND: ${Qt6_FOUND}")
 message(STATUS "Qt5_FOUND: ${Qt5_FOUND}")
 
-add_executable(armfaceid-client src/main.cpp src/camera.cpp 
-                                src/qt_gui/qt_gui.cpp src/utils/base.cpp
-                                src/face_analyzer.cpp
-)
+
+add_executable(armfaceid-client ${SOURCES})
 
 target_link_libraries(
   armfaceid-client PUBLIC absl::flags absl::flags_parse absl::flags_usage rpc
@@ -59,9 +66,13 @@ target_link_libraries(
                           ${SeetaFaceDetector_LIBRARY} ${SeetaFaceLandmarker_LIBRARY}
                           ${SeetaFaceAntiSpoofingX_LIBRARY} ${SeetaQualityAssessor_LIBRARY})
 
+message(STATUS "OpenCV库： ${OpenCV_INCLUDE_DIRS} ${TREASURE_CHEST_INCLUDE_DIRS}")
+
 target_include_directories(
   armfaceid-client PUBLIC include 
                           ${OpenCV_INCLUDE_DIRS} ${TREASURE_CHEST_INCLUDE_DIRS}                                                 
+                          ${SeetaFaceDetector_INCLUDE_DIR}/seeta ${SeetaFaceLandmarker_INCLUDE_DIR}/seeta
+                          ${SeetaFaceAntiSpoofingX_INCLUDE_DIR}/seeta ${SeetaQualityAssessor_INCLUDE_DIR}/seeta
                           ${SeetaFaceDetector_INCLUDE_DIR} ${SeetaFaceLandmarker_INCLUDE_DIR}
                           ${SeetaFaceAntiSpoofingX_INCLUDE_DIR} ${SeetaQualityAssessor_INCLUDE_DIR})
 

@@ -10,11 +10,11 @@
 #include <opencv2/core/mat.hpp>
 #include <spdlog/spdlog.h>
 
-#include "CFaceInfo.h"
-#include "Common/CStruct.h"
-#include "FaceAntiSpoofing.h"
 #include "QualityOfIntegrity.h"
 #include "QualityStructure.h"
+#include "seeta/CFaceInfo.h"
+#include "seeta/Common/CStruct.h"
+#include "seeta/FaceAntiSpoofing.h"
 #include "utils/base.h"
 #include "utils/log.h"
 

@@ -6,6 +6,10 @@
 path_config.cmake
 *.tar.*
 /*build*
+<<<<<<< HEAD
 .idea
 /.idea
 CMakeLists.txt
+=======
+/.idea
+>>>>>>> ZRDS_GUI
