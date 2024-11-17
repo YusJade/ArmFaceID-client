@@ -18,6 +18,8 @@
 #include "grpc/include/rpc_client.h"
 #include "qt_gui/qt_gui.h"
 
+#include "face.pb.h"
+
 ABSL_FLAG(int, camera_index, 0, "必需：本地摄像头 index");
 ABSL_FLAG(bool, net_camera, true, "可选：是否启用网络摄像头");
 ABSL_FLAG(std::string, camera_url, "http://localhost:3306/",
@@ -91,6 +93,7 @@ int main(int argc, char *argv[]) {
   camera.AddObserver<cv::Mat>(qt_gui);
   face_analyzer.AddObserver<arm_face_id::FaceAnalyzer::EventBase>(qt_gui);
   face_analyzer.AddObserver<arm_face_id::FaceAnalyzer::AnalyzeMsg>(qt_gui);
+  rpc_client->AddObserver<arm_face_id::UserInfo>(qt_gui);
   /*----------------------------*/
 
   return app.exec();

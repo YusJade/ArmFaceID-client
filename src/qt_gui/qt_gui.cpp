@@ -14,11 +14,13 @@
 #include <qpen.h>
 #include <qpixmap.h>
 #include <qstringview.h>
+#include <qtmetamacros.h>
 #include <qwidget.h>
 
 #include <QFontDatabase>
 #include <string>
 
+#include "QualityStructure.h"
 #include "face_analyzer.h"
 #include "qt_gui/notification.h"
 #include "utils/base.h"
@@ -224,6 +226,11 @@ void QtGUI::InitWindow() {
   cont_grid_layout->setColumnStretch(2, 3);
   cont_grid_layout->setRowStretch(0, 1);
   cont_grid_layout->setRowStretch(1, 10);
+
+  connect(
+      this, &QtGUI::notify, this,
+      [&](NotifyType type, NotifyPosition pos, QString title, QString content,
+          int nLive) { nf1->Push(type, pos, title, content); });
 }
 // 工具栏悬停监控
 bool QtGUI::eventFilter(QObject* watched, QEvent* event) {
@@ -472,6 +479,39 @@ void QtGUI::leaveEvent(QEvent* event) {
   QWidget::leaveEvent(event);
 }
 
+void QtGUI::CheckNeedNotification(const FaceAnalyzer::AnalyzeMsg& message) {
+  if (message.res.empty()) return;
+  auto top_res = message.res.front();
+  if (top_res.integrity_res.level <= seeta::QualityLevel::MEDIUM) {
+    cur_notify_cnter = 0;
+    emit notify(NotifyType::Notify_Type_Warning, NotifyPosition::Pos_Top_Left,
+                "提示", "请让脸部完整出现在区域内");
+  } else if (top_res.pose_res.level <= seeta::QualityLevel::MEDIUM) {
+    cur_notify_cnter = 0;
+    emit notify(NotifyType::Notify_Type_Warning, NotifyPosition::Pos_Top_Left,
+                "提示", "请让正对摄像头");
+  }
+}
+
+void QtGUI::OnNotify(const UserInfo& message) {
+  if (message.user_id() < 0) return;
+  if (cur_notify_cnter > notify_interval) {
+    emit notify(NotifyType::Notify_Type_Success, NotifyPosition::Pos_Top_Left,
+                "成功",
+                QString::fromStdString("欢迎你，" + message.user_name()));
+    cur_notify_cnter = 0;
+  }
+  le_email->setText(QString::fromStdString(message.email()));
+  QByteArray pic_array(message.profile_picture().data(),
+                       message.profile_picture().size());
+  QPixmap pic;
+  pic.loadFromData(pic_array);
+  lb_headshot->setPixmap(pic);
+  le_username->setText(QString::fromStdString(message.user_name()));
+  le_lastused->setText(
+      QString::fromStdString(message.last_recognized_datetime()));
+}
+
 void QtGUI::OnNotify(const cv::Mat& message) {
   // 将信息提示帧与画面帧叠加
   QPixmap frame = QPixmap::fromImage(utils::mat_to_qimage(message));
@@ -508,6 +548,10 @@ void QtGUI::OnNotify(const FaceAnalyzer::EventBase& message) {
 }
 
 void QtGUI::OnNotify(const FaceAnalyzer::AnalyzeMsg& message) {
+  cur_notify_cnter++;
+  if (cur_notify_cnter >= notify_interval) {
+    CheckNeedNotification(message);
+  }
   QFont default_font("Arial");
   default_font.setPixelSize(12);
   notification_delay_cnter = 0;

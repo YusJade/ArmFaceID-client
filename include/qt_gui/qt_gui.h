@@ -1,6 +1,7 @@
 #pragma once
 #include <qlabel.h>
 #include <qpixmap.h>
+#include <qtmetamacros.h>
 #include <qwidget.h>
 
 #include <QGridLayout>
@@ -29,6 +30,8 @@
 #include "face_analyzer.h"
 #include "observer/core.h"
 #include "qt_gui/notification.h"
+
+#include "face.pb.h"
 // 自定义的 camera.h 和 face_analyzer.h 头文件。
 // observer/core.h 可能与观察者模式有关，用于事件通知。
 
@@ -53,13 +56,27 @@ class QtGUI  // 定义QtGUI类
     : public QMainWindow,
       public treasure_chest::pattern::Observer<cv::Mat>,
       public treasure_chest::pattern::Observer<FaceAnalyzer::AnalyzeMsg>,
-      public treasure_chest::pattern::Observer<FaceAnalyzer::EventBase> {
+      public treasure_chest::pattern::Observer<FaceAnalyzer::EventBase>,
+      public treasure_chest::pattern::Observer<UserInfo> {
+  Q_OBJECT
  public:
   QtGUI() = default;
   void OnNotify(const cv::Mat &message) override;
   void OnNotify(const FaceAnalyzer::EventBase &message) override;
   void OnNotify(const FaceAnalyzer::AnalyzeMsg &message) override;
+  void OnNotify(const UserInfo &message) override;
   void InitWindow();
+
+  void CheckNeedNotification(const FaceAnalyzer::AnalyzeMsg &message);
+
+ signals:
+  [[deprecated]]
+  void notify(NotifyType type, NotifyPosition pos, QString title,
+              QString content, int nLive = 3000);
+
+ private:
+  const int notify_interval = 30;
+  int cur_notify_cnter = 0;
 
  private:
   QWidget *main_widget_ = nullptr;
