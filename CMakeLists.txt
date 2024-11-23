@@ -34,23 +34,37 @@ find_package(OpenCV CONFIG REQUIRED)
 find_package(absl CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 find_package(Qt6 COMPONENTS Core Widgets CONFIG)
+
 set(SOURCES 
-  src/main.cpp src/camera.cpp 
-  src/qt_gui/qt_gui.cpp src/utils/base.cpp
+  src/main.cpp 
+  src/camera.cpp 
+  src/utils/base.cpp
   src/face_analyzer.cpp
+  src/qt_gui/client_ui.cpp 
+  src/qt_gui/client.cpp 
+  src/qt_gui/notification.cpp
+  src/qt_gui/resizable_label.cpp
   src/qt_gui/notification.cpp)
 
+set(QT_WRAP_HEADERS
+  include/qt_gui/client_ui.h
+  include/qt_gui/client.h
+  include/qt_gui/notification.h
+  include/qt_gui/resizable_label.h
+)
  
 if(${Qt6_FOUND})
   set(Qt_LIBRARIES Qt6::Core Qt6::Widgets)
-  qt_wrap_cpp(SOURCES include/qt_gui/notification.h include/qt_gui/qt_gui.h)
+  qt_wrap_cpp(SOURCES ${QT_WRAP_HEADERS})
+  qt_add_resources(resources assets/resource.qrc)
 else()
   find_package(Qt5 COMPONENTS Core Widgets CONFIG REQUIRED)
   if(${Qt5_FOUND})
     set(Qt_LIBRARIES Qt5::Core Qt5::Widgets)
-    qt5_wrap_cpp(SOURCES include/qt_gui/notification.h include/qt_gui/qt_gui.h)
+    qt5_wrap_cpp(SOURCES ${QT_WRAP_HEADERS})
+    qt5_add_resources(resources assets/resource.qrc)
   else()
-    message(STATUS "找不到可用的 Qt !")
+    message(ERROR "找不到可用的 Qt !")
   endif()
 endif()
 
@@ -60,13 +74,13 @@ message(STATUS "Qt5_FOUND: ${Qt5_FOUND}")
 
 add_executable(armfaceid-client ${SOURCES})
 
+target_sources(armfaceid-client PRIVATE ${resources})
+
 target_link_libraries(
   armfaceid-client PUBLIC absl::flags absl::flags_parse absl::flags_usage rpc
                           spdlog::spdlog ${Qt_LIBRARIES} ${OpenCV_LIBS}
                           ${SeetaFaceDetector_LIBRARY} ${SeetaFaceLandmarker_LIBRARY}
                           ${SeetaFaceAntiSpoofingX_LIBRARY} ${SeetaQualityAssessor_LIBRARY})
-
-message(STATUS "OpenCV库： ${OpenCV_INCLUDE_DIRS} ${TREASURE_CHEST_INCLUDE_DIRS}")
 
 target_include_directories(
   armfaceid-client PUBLIC include 

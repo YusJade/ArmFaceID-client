@@ -49,26 +49,26 @@ void QtGUI::InitWindow() {
   }
 
   // 主窗口
-  centralwidget = new QWidget;
-  setCentralWidget(centralwidget);
-  main_grid_layout_ = new QGridLayout(centralwidget);
+  centralwidget_ = new QWidget;
+  setCentralWidget(centralwidget_);
+  main_grid_layout_ = new QGridLayout(centralwidget_);
   main_grid_layout_->setContentsMargins(0, 0, 0, 0);
-  centralwidget->setSizePolicy(sizePolicy);
-  centralwidget->setMinimumSize(800, 400);
+  centralwidget_->setSizePolicy(sizePolicy);
+  centralwidget_->setMinimumSize(800, 400);
 
   // 背景标签
-  lb_bg = new QLabel(centralwidget);
-  lb_bg->setPixmap(QPixmap("assets/bg5.png"));
-  lb_bg->setScaledContents(true);
-  main_grid_layout_->addWidget(lb_bg, 0, 0, 1, 1);
+  lb_bg_ = new QLabel(centralwidget_);
+  lb_bg_->setPixmap(QPixmap("assets/bg5.png"));
+  lb_bg_->setScaledContents(true);
+  main_grid_layout_->addWidget(lb_bg_, 0, 0, 1, 1);
 
   // 创建子容器
-  contwidget = new QWidget(centralwidget);
-  cont_grid_layout = new QGridLayout(contwidget);
-  contwidget->setLayout(cont_grid_layout);
-  main_grid_layout_->addWidget(contwidget, 0, 0, 1, 1);
-  cont_grid_layout->setContentsMargins(15, 15, 25, 15);
-  contwidget->raise();
+  contwidget_ = new QWidget(centralwidget_);
+  cont_grid_layout_ = new QGridLayout(contwidget_);
+  contwidget_->setLayout(cont_grid_layout_);
+  main_grid_layout_->addWidget(contwidget_, 0, 0, 1, 1);
+  cont_grid_layout_->setContentsMargins(15, 15, 25, 15);
+  contwidget_->raise();
 
   // 一些样式
   //   QString btn_style = R"(
@@ -93,69 +93,69 @@ void QtGUI::InitWindow() {
   ControlButton();
 
   // tool 栏目
-  gb_tool = new QGroupBox(lb_bg);
-  cont_grid_layout->addWidget(gb_tool, 0, 0, 2, 1);
-  tool_vbox_layout = new QVBoxLayout(gb_tool);
-  lb_logo = new QLabel(gb_tool);
-  lb_logo->setPixmap(QPixmap("assets/logo3.ico"));
-  lb_logo->setFixedSize(50, 50);
-  lb_logo->setScaledContents(true);
-  gb_tool->setStyleSheet(
+  gb_tool_ = new QGroupBox(lb_bg_);
+  cont_grid_layout_->addWidget(gb_tool_, 0, 0, 2, 1);
+  tool_vbox_layout_ = new QVBoxLayout(gb_tool_);
+  lb_logo_ = new QLabel(gb_tool_);
+  lb_logo_->setPixmap(QPixmap("assets/logo3.ico"));
+  lb_logo_->setFixedSize(50, 50);
+  lb_logo_->setScaledContents(true);
+  gb_tool_->setStyleSheet(
       "QGroupBox { border: none;margin: 0px; max-width: "
       "60px;margin-right:5px;}");
-  tool_vbox_layout->addWidget(lb_logo);
-  btn1 = new QPushButton("Go", gb_tool);
-  btn1->setFixedSize(50, 50);
-  btn2 = new QPushButton("Stop", gb_tool);
-  btn2->setFixedSize(50, 50);
-  btn3 = new QPushButton("...", gb_tool);
-  btn3->setFixedSize(50, 50);
-  btn1->setStyleSheet(btn_style_small);
-  btn2->setStyleSheet(btn_style_small);
-  btn3->setStyleSheet(btn_style_small);
-  btn1->setVisible(false);
-  btn2->setVisible(false);
-  btn3->setVisible(false);
-  tool_vbox_layout->addWidget(btn1);
-  tool_vbox_layout->addWidget(btn2);
-  tool_vbox_layout->addWidget(btn3);
-  tool_vbox_layout->setSpacing(10);
-  tool_vbox_layout->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
-  anim1 = new QPropertyAnimation(btn1, "pos");
-  anim2 = new QPropertyAnimation(btn2, "pos");
-  anim3 = new QPropertyAnimation(btn3, "pos");
-  anim1->setDuration(200);
-  anim2->setDuration(300);
-  anim3->setDuration(400);
-  anim1->setStartValue(QPoint(10, 60));
-  anim1->setEndValue(QPoint(10, 80));
-  anim2->setStartValue(QPoint(10, 65));
-  anim2->setEndValue(QPoint(10, 140));
-  anim3->setStartValue(QPoint(10, 70));
-  anim3->setEndValue(QPoint(10, 200));
-  lb_logo->installEventFilter(this);
-  gb_tool->installEventFilter(this);
+  tool_vbox_layout_->addWidget(lb_logo_);
+  btn1_ = new QPushButton("Go", gb_tool_);
+  btn1_->setFixedSize(50, 50);
+  btn2_ = new QPushButton("Stop", gb_tool_);
+  btn2_->setFixedSize(50, 50);
+  btn3_ = new QPushButton("...", gb_tool_);
+  btn3_->setFixedSize(50, 50);
+  btn1_->setStyleSheet(btn_style_small_);
+  btn2_->setStyleSheet(btn_style_small_);
+  btn3_->setStyleSheet(btn_style_small_);
+  btn1_->setVisible(false);
+  btn2_->setVisible(false);
+  btn3_->setVisible(false);
+  tool_vbox_layout_->addWidget(btn1_);
+  tool_vbox_layout_->addWidget(btn2_);
+  tool_vbox_layout_->addWidget(btn3_);
+  tool_vbox_layout_->setSpacing(10);
+  tool_vbox_layout_->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
+  anim1_ = new QPropertyAnimation(btn1_, "pos");
+  anim2_ = new QPropertyAnimation(btn2_, "pos");
+  anim3_ = new QPropertyAnimation(btn3_, "pos");
+  anim1_->setDuration(200);
+  anim2_->setDuration(300);
+  anim3_->setDuration(400);
+  anim1_->setStartValue(QPoint(10, 60));
+  anim1_->setEndValue(QPoint(10, 80));
+  anim2_->setStartValue(QPoint(10, 65));
+  anim2_->setEndValue(QPoint(10, 140));
+  anim3_->setStartValue(QPoint(10, 70));
+  anim3_->setEndValue(QPoint(10, 200));
+  lb_logo_->installEventFilter(this);
+  gb_tool_->installEventFilter(this);
 
   // cam 栏目
-  gb_camera = new QGroupBox(lb_bg);
-  gb_camera->setStyleSheet(
+  gb_camera_ = new QGroupBox(lb_bg_);
+  gb_camera_->setStyleSheet(
       "QGroupBox {min-width:400px; "
       "min-height:200px;margin-top:15px;background-color:#121630;}");
-  cont_grid_layout->addWidget(gb_camera, 0, 1, 2, 1);
-  cam_vbox_layout = new QVBoxLayout(gb_camera);
-  lb_camera = new ResizableLabel;
-  cam_vbox_layout->addWidget(lb_camera);
+  cont_grid_layout_->addWidget(gb_camera_, 0, 1, 2, 1);
+  cam_vbox_layout_ = new QVBoxLayout(gb_camera_);
+  lb_camera_ = new ResizableLabel;
+  cam_vbox_layout_->addWidget(lb_camera_);
 
-  camera_frame_label_ = lb_camera;
+  camera_frame_label_ = lb_camera_;
   faces_notification_pixmap_ = QPixmap(camera_frame_label_->size());
   faces_notification_pixmap_.fill(Qt::transparent);
 
   // info 栏目
   QSpacerItem* info_spacer =
       new QSpacerItem(10, 40, QSizePolicy::Expanding, QSizePolicy::Expanding);
-  gb_info = new QGroupBox(lb_bg);
-  cont_grid_layout->addWidget(gb_info, 1, 2, 1, 1);
-  gb_info->setStyleSheet(
+  gb_info_ = new QGroupBox(lb_bg_);
+  cont_grid_layout_->addWidget(gb_info_, 1, 2, 1, 1);
+  gb_info_->setStyleSheet(
       "QGroupBox {"
       "   border:transparent;"
       "   min-width: 90px;"
@@ -163,97 +163,97 @@ void QtGUI::InitWindow() {
       "QGroupBox QWidget {"
       "   color: #0ffff3;"
       "}");
-  info_vbox_layout = new QVBoxLayout(gb_info);
-  info_vbox_layout->setSpacing(0);
+  info_vbox_layout_ = new QVBoxLayout(gb_info_);
+  info_vbox_layout_->setSpacing(0);
   QString lineEditStyle = "QLineEdit {background-color:#1A1F3D;color:white;}";
 
   // 显示用户个性头像
-  lb_headshot = new ResizableLabel(gb_info);
-  info_vbox_layout->addWidget(lb_headshot, 3);
-  lb_headshot->setStyleSheet("background-color:black;min-height:100px;");
-  QPixmap pixmap_hs(lb_headshot->size());
+  lb_headshot_ = new ResizableLabel(gb_info_);
+  info_vbox_layout_->addWidget(lb_headshot_, 3);
+  lb_headshot_->setStyleSheet("background-color:black;min-height:100px;");
+  QPixmap pixmap_hs(lb_headshot_->size());
   QPainter painter_hs(&pixmap_hs);
 
-  lb_username = new QLabel("◇  Username", gb_info);  // 显示用户昵称
-  info_vbox_layout->addWidget(lb_username, 1);
-  le_username = new QLineEdit(gb_info);
-  le_username->setReadOnly(true);
-  le_username->setStyleSheet(lineEditStyle);
-  info_vbox_layout->addWidget(le_username, 1);
+  lb_username_ = new QLabel("◇  Username", gb_info_);  // 显示用户昵称
+  info_vbox_layout_->addWidget(lb_username_, 1);
+  le_username_ = new QLineEdit(gb_info_);
+  le_username_->setReadOnly(true);
+  le_username_->setStyleSheet(lineEditStyle);
+  info_vbox_layout_->addWidget(le_username_, 1);
 
-  lb_email = new QLabel("◇  Email", gb_info);  // 显示电子邮箱
-  info_vbox_layout->addWidget(lb_email, 1);
-  le_email = new QLineEdit(gb_info);
-  le_email->setReadOnly(true);
-  le_email->setStyleSheet(lineEditStyle);
-  info_vbox_layout->addWidget(le_email, 1);
+  lb_email_ = new QLabel("◇  Email", gb_info_);  // 显示电子邮箱
+  info_vbox_layout_->addWidget(lb_email_, 1);
+  le_email_ = new QLineEdit(gb_info_);
+  le_email_->setReadOnly(true);
+  le_email_->setStyleSheet(lineEditStyle);
+  info_vbox_layout_->addWidget(le_email_, 1);
 
-  lb_lastused = new QLabel("◇  LastUsed", gb_info);  // 显示上一次使用时间
-  info_vbox_layout->addWidget(lb_lastused, 1);
-  le_lastused = new QLineEdit(gb_info);
-  le_lastused->setReadOnly(true);
-  le_lastused->setStyleSheet(lineEditStyle);
-  info_vbox_layout->addWidget(le_lastused, 1);
-  info_vbox_layout->addItem(info_spacer);
-  pb_verify1 =
-      new QPushButton("TEST A", gb_info);  // 测试用按钮，点击弹出‘警告’
-  pb_verify1->setStyleSheet(btn_style_big);
-  info_vbox_layout->addWidget(pb_verify1, 2);
-  nf1 = new Notification(contwidget);  // 测试按钮a
-  connect(pb_verify1, &QPushButton::clicked, this, [&]() {
-    nf1->Push(NotifyType::Notify_Type_Warning, NotifyPosition::Pos_Top_Left,
-              "Warning", "ABCDE Failed!", 2000);
+  lb_lastused_ = new QLabel("◇  LastUsed", gb_info_);  // 显示上一次使用时间
+  info_vbox_layout_->addWidget(lb_lastused_, 1);
+  le_lastused_ = new QLineEdit(gb_info_);
+  le_lastused_->setReadOnly(true);
+  le_lastused_->setStyleSheet(lineEditStyle);
+  info_vbox_layout_->addWidget(le_lastused_, 1);
+  info_vbox_layout_->addItem(info_spacer);
+  pb_verify1_ =
+      new QPushButton("TEST A", gb_info_);  // 测试用按钮，点击弹出‘警告’
+  pb_verify1_->setStyleSheet(btn_style_big_);
+  info_vbox_layout_->addWidget(pb_verify1_, 2);
+  nf1_ = new Notification(contwidget_);  // 测试按钮a
+  connect(pb_verify1_, &QPushButton::clicked, this, [&]() {
+    nf1_->Push(NotifyType::Notify_Type_Warning, NotifyPosition::Pos_Top_Left,
+               "Warning", "ABCDE Failed!", 2000);
   });
-  pb_verify1->move(200, 50);
-  info_vbox_layout->addItem(info_spacer);
-  pb_verify2 =
-      new QPushButton("TEST B", gb_info);  // 测试用按钮，点击弹出‘错误’
-  pb_verify2->setStyleSheet(btn_style_big);
-  info_vbox_layout->addWidget(pb_verify2, 2);
+  pb_verify1_->move(200, 50);
+  info_vbox_layout_->addItem(info_spacer);
+  pb_verify2_ =
+      new QPushButton("TEST B", gb_info_);  // 测试用按钮，点击弹出‘错误’
+  pb_verify2_->setStyleSheet(btn_style_big_);
+  info_vbox_layout_->addWidget(pb_verify2_, 2);
 
-  nf2 = new Notification(contwidget);  // 测试按钮b
-  connect(pb_verify2, &QPushButton::clicked, this, [&]() {
-    nf2->Push(NotifyType::Notify_Type_Error, NotifyPosition::Pos_Top_Left,
-              "Error", "ABCDE Failed!", 2000);
+  nf2_ = new Notification(contwidget_);  // 测试按钮b
+  connect(pb_verify2_, &QPushButton::clicked, this, [&]() {
+    nf2_->Push(NotifyType::Notify_Type_Error, NotifyPosition::Pos_Top_Left,
+               "Error", "ABCDE Failed!", 2000);
   });
-  pb_verify2->move(200, 50);
+  pb_verify2_->move(200, 50);
 
-  info_vbox_layout->addItem(info_spacer);
+  info_vbox_layout_->addItem(info_spacer);
 
   // 设置伸缩因子
-  cont_grid_layout->setColumnStretch(0, 2);
-  cont_grid_layout->setColumnStretch(1, 9);
-  cont_grid_layout->setColumnStretch(2, 3);
-  cont_grid_layout->setRowStretch(0, 1);
-  cont_grid_layout->setRowStretch(1, 10);
+  cont_grid_layout_->setColumnStretch(0, 2);
+  cont_grid_layout_->setColumnStretch(1, 9);
+  cont_grid_layout_->setColumnStretch(2, 3);
+  cont_grid_layout_->setRowStretch(0, 1);
+  cont_grid_layout_->setRowStretch(1, 10);
 
   connect(
       this, &QtGUI::notify, this,
       [&](NotifyType type, NotifyPosition pos, QString title, QString content,
-          int nLive) { nf1->Push(type, pos, title, content); });
+          int nLive) { nf1_->Push(type, pos, title, content); });
 }
 // 工具栏悬停监控
 bool QtGUI::eventFilter(QObject* watched, QEvent* event) {
-  if (watched == lb_logo && event->type() == QEvent::Enter) {
-    btn1->setVisible(true);
-    btn2->setVisible(true);
-    btn3->setVisible(true);
-    anim1->setDirection(QAbstractAnimation::Forward);
-    anim2->setDirection(QAbstractAnimation::Forward);
-    anim3->setDirection(QAbstractAnimation::Forward);
-    anim1->start();
-    anim2->start();
-    anim3->start();
-  } else if (watched == gb_tool && event->type() == QEvent::Leave) {
-    QPropertyAnimation* animations[] = {anim1, anim2, anim3};
+  if (watched == lb_logo_ && event->type() == QEvent::Enter) {
+    btn1_->setVisible(true);
+    btn2_->setVisible(true);
+    btn3_->setVisible(true);
+    anim1_->setDirection(QAbstractAnimation::Forward);
+    anim2_->setDirection(QAbstractAnimation::Forward);
+    anim3_->setDirection(QAbstractAnimation::Forward);
+    anim1_->start();
+    anim2_->start();
+    anim3_->start();
+  } else if (watched == gb_tool_ && event->type() == QEvent::Leave) {
+    QPropertyAnimation* animations[] = {anim1_, anim2_, anim3_};
     for (auto anim : animations) {
       anim->setDirection(QAbstractAnimation::Backward);
       anim->start();
     }
     QTimer::singleShot(300, [this]() {
-      btn1->setVisible(false);
-      btn2->setVisible(false);
-      btn3->setVisible(false);
+      btn1_->setVisible(false);
+      btn2_->setVisible(false);
+      btn3_->setVisible(false);
     });
   }
   return QWidget::eventFilter(watched, event);
@@ -261,42 +261,43 @@ bool QtGUI::eventFilter(QObject* watched, QEvent* event) {
 
 // 自定义窗口按钮
 void QtGUI::ControlButton() {
-  closeButton = new QPushButton("✕");
-  closeButton->setFixedSize(40, 50);
-  closeButton->setStyleSheet(btn_style_small);
-  connect(closeButton, &QPushButton::clicked, this, &QWidget::close);
-  minimizeButton = new QPushButton("-");
-  minimizeButton->setFixedSize(20, 50);
-  minimizeButton->setStyleSheet(btn_style_small);
-  connect(minimizeButton, &QPushButton::clicked, this, &QWidget::showMinimized);
+  close_button_ = new QPushButton("✕");
+  close_button_->setFixedSize(40, 50);
+  close_button_->setStyleSheet(btn_style_small_);
+  connect(close_button_, &QPushButton::clicked, this, &QWidget::close);
+  minimize_button_ = new QPushButton("-");
+  minimize_button_->setFixedSize(20, 50);
+  minimize_button_->setStyleSheet(btn_style_small_);
+  connect(minimize_button_, &QPushButton::clicked, this,
+          &QWidget::showMinimized);
   QPushButton* maximizeButton = new QPushButton("□");
   maximizeButton->setFixedSize(30, 50);
-  maximizeButton->setStyleSheet(btn_style_small);
+  maximizeButton->setStyleSheet(btn_style_small_);
   connect(maximizeButton, &QPushButton::clicked, this,
           [this, maximizeButton]() {
-            if (isMaximized) {
+            if (is_maximized_) {
               this->showNormal();
               maximizeButton->setText("□");
-              maximizeButton->setStyleSheet(btn_style_small);
-              lb_bg->setStyleSheet("background-color: transparent;");
+              maximizeButton->setStyleSheet(btn_style_small_);
+              lb_bg_->setStyleSheet("background-color: transparent;");
             } else {
               this->showMaximized();
               maximizeButton->setText("⛶");
-              maximizeButton->setStyleSheet(btn_style_small);
-              lb_bg->setStyleSheet("background-color: #090C21;");
+              maximizeButton->setStyleSheet(btn_style_small_);
+              lb_bg_->setStyleSheet("background-color: #090C21;");
             }
-            isMaximized = !isMaximized;
+            is_maximized_ = !is_maximized_;
           });
-  gb_pointbutton = new QGroupBox(lb_bg);
-  btn_hbox_layout = new QHBoxLayout(gb_pointbutton);
-  btn_hbox_layout->addWidget(minimizeButton);
-  btn_hbox_layout->addWidget(maximizeButton);
-  btn_hbox_layout->addWidget(closeButton);
-  btn_hbox_layout->setAlignment(Qt::AlignRight | Qt::AlignTop);
-  btn_hbox_layout->setContentsMargins(0, 0, 0, 0);
-  gb_pointbutton->setStyleSheet(
+  gb_pointbutton_ = new QGroupBox(lb_bg_);
+  btn_hbox_layout_ = new QHBoxLayout(gb_pointbutton_);
+  btn_hbox_layout_->addWidget(minimize_button_);
+  btn_hbox_layout_->addWidget(maximizeButton);
+  btn_hbox_layout_->addWidget(close_button_);
+  btn_hbox_layout_->setAlignment(Qt::AlignRight | Qt::AlignTop);
+  btn_hbox_layout_->setContentsMargins(0, 0, 0, 0);
+  gb_pointbutton_->setStyleSheet(
       "QGroupBox {border: none; margin-right:20px; margin-top:15px;}");
-  cont_grid_layout->addWidget(gb_pointbutton, 0, 2, 1, 1);
+  cont_grid_layout_->addWidget(gb_pointbutton_, 0, 2, 1, 1);
 }
 
 bool QtGUI::event(QEvent* event) {
@@ -311,19 +312,19 @@ bool QtGUI::event(QEvent* event) {
 
 void QtGUI::mousePressEvent(QMouseEvent* event) {
   if (event->button() == Qt::LeftButton) {
-    m_bIsPressed = true;
-    m_pressPoint = event->globalPosition();
+    b_is_pressed_ = true;
+    press_point_ = event->globalPosition();
   }
   return QWidget::mousePressEvent(event);
 }
 
 void QtGUI::mouseMoveEvent(QMouseEvent* event) {
-  if (m_bIsPressed) {
-    if (m_bIsResizing) {
-      m_movePoint = event->globalPosition() - m_pressPoint;
-      m_pressPoint += m_movePoint;
+  if (b_is_pressed_) {
+    if (b_is_resizing_) {
+      move_point_ = event->globalPosition() - press_point_;
+      press_point_ += move_point_;
     } else {
-      if (!m_bIsDoublePressed && windowState() == Qt::WindowMaximized) {
+      if (!b_is_double_pressed_ && windowState() == Qt::WindowMaximized) {
         QScreen* screen = QGuiApplication::primaryScreen();
         QRect screenGeometry = screen->geometry();
         QPointF point(width() * ((double)(event->globalPosition().x()) /
@@ -331,11 +332,11 @@ void QtGUI::mouseMoveEvent(QMouseEvent* event) {
                       height() * ((double)(event->globalPosition().y()) /
                                   screenGeometry.height()));
         move((event->globalPosition() - point).toPoint());
-        m_pressPoint = event->globalPosition();
+        press_point_ = event->globalPosition();
       }
-      QPointF point = event->globalPosition() - m_pressPoint;
+      QPointF point = event->globalPosition() - press_point_;
       move((pos() + point).toPoint());
-      m_pressPoint = event->globalPosition();
+      press_point_ = event->globalPosition();
     }
   }
   if (windowState() != Qt::WindowMaximized) {
@@ -353,105 +354,105 @@ void QtGUI::updateRegion(QMouseEvent* event) {
   int marginRight = mainRect.x() + mainRect.width() - globalPos.x();
   const int MARGIN_MIN_SIZE = 10;
   const int MARGIN_MAX_SIZE = 20;
-  if (!m_bIsResizing) {
+  if (!b_is_resizing_) {
     if ((marginRight >= MARGIN_MIN_SIZE && marginRight <= MARGIN_MAX_SIZE) &&
         (marginBottom <= MARGIN_MAX_SIZE && marginBottom >= MARGIN_MIN_SIZE)) {
-      m_direction = BOTTOMRIGHT;
+      direction_ = BOTTOMRIGHT;
       setCursor(Qt::SizeFDiagCursor);
     } else if ((marginTop >= MARGIN_MIN_SIZE && marginTop <= MARGIN_MAX_SIZE) &&
                (marginRight >= MARGIN_MIN_SIZE &&
                 marginRight <= MARGIN_MAX_SIZE)) {
-      m_direction = TOPRIGHT;
+      direction_ = TOPRIGHT;
       setCursor(Qt::SizeBDiagCursor);
     } else if ((marginLeft >= MARGIN_MIN_SIZE &&
                 marginLeft <= MARGIN_MAX_SIZE) &&
                (marginTop >= MARGIN_MIN_SIZE && marginTop <= MARGIN_MAX_SIZE)) {
-      m_direction = TOPLEFT;
+      direction_ = TOPLEFT;
       setCursor(Qt::SizeFDiagCursor);
     } else if ((marginLeft >= MARGIN_MIN_SIZE &&
                 marginLeft <= MARGIN_MAX_SIZE) &&
                (marginBottom >= MARGIN_MIN_SIZE &&
                 marginBottom <= MARGIN_MAX_SIZE)) {
-      m_direction = BOTTOMLEFT;
+      direction_ = BOTTOMLEFT;
       setCursor(Qt::SizeBDiagCursor);
     } else if (marginBottom <= MARGIN_MAX_SIZE &&
                marginBottom >= MARGIN_MIN_SIZE) {
-      m_direction = DOWN;
+      direction_ = DOWN;
       setCursor(Qt::SizeVerCursor);
     } else if (marginLeft <= MARGIN_MAX_SIZE - 1 &&
                marginLeft >= MARGIN_MIN_SIZE - 1) {
-      m_direction = LEFT;
+      direction_ = LEFT;
       setCursor(Qt::SizeHorCursor);
     } else if (marginRight <= MARGIN_MAX_SIZE &&
                marginRight >= MARGIN_MIN_SIZE) {
-      m_direction = RIGHT;
+      direction_ = RIGHT;
       setCursor(Qt::SizeHorCursor);
     } else if (marginTop <= MARGIN_MAX_SIZE && marginTop >= MARGIN_MIN_SIZE) {
-      m_direction = UP;
+      direction_ = UP;
       setCursor(Qt::SizeVerCursor);
     } else {
-      if (!m_bIsPressed) {
+      if (!b_is_pressed_) {
         setCursor(Qt::ArrowCursor);
       }
     }
   }
-  if (NONE != m_direction) {
-    m_bIsResizing = true;
+  if (NONE != direction_) {
+    b_is_resizing_ = true;
     resizeRegion(marginTop, marginBottom, marginLeft, marginRight);
   }
 }
 
 void QtGUI::resizeRegion(int marginTop, int marginBottom, int marginLeft,
                          int marginRight) {
-  if (m_bIsPressed) {
-    switch (m_direction) {
+  if (b_is_pressed_) {
+    switch (direction_) {
       case BOTTOMRIGHT: {
         QRect rect = geometry();
-        rect.setBottomRight((rect.bottomRight() + m_movePoint).toPoint());
+        rect.setBottomRight((rect.bottomRight() + move_point_).toPoint());
         setGeometry(rect);
       } break;
       case TOPRIGHT: {
         if (marginLeft > minimumWidth() && marginBottom > minimumHeight()) {
           QRect rect = geometry();
-          rect.setTopRight((rect.topRight() + m_movePoint).toPoint());
+          rect.setTopRight((rect.topRight() + move_point_).toPoint());
           setGeometry(rect);
         }
       } break;
       case TOPLEFT: {
         if (marginRight > minimumWidth() && marginBottom > minimumHeight()) {
           QRect rect = geometry();
-          rect.setTopLeft((rect.topLeft() + m_movePoint).toPoint());
+          rect.setTopLeft((rect.topLeft() + move_point_).toPoint());
           setGeometry(rect);
         }
       } break;
       case BOTTOMLEFT: {
         if (marginRight > minimumWidth() && marginTop > minimumHeight()) {
           QRect rect = geometry();
-          rect.setBottomLeft((rect.bottomLeft() + m_movePoint).toPoint());
+          rect.setBottomLeft((rect.bottomLeft() + move_point_).toPoint());
           setGeometry(rect);
         }
       } break;
       case RIGHT: {
         QRect rect = geometry();
-        rect.setWidth(rect.width() + m_movePoint.x());
+        rect.setWidth(rect.width() + move_point_.x());
         setGeometry(rect);
       } break;
       case DOWN: {
         QRect rect = geometry();
-        rect.setHeight(rect.height() + m_movePoint.y());
+        rect.setHeight(rect.height() + move_point_.y());
         setGeometry(rect);
       } break;
       case LEFT: {
         if (marginRight > minimumWidth()) {
           QRect rect = geometry();
-          rect.setLeft(rect.x() + m_movePoint.x());
+          rect.setLeft(rect.x() + move_point_.x());
           setGeometry(rect);
         }
       } break;
       case UP: {
         if (marginBottom > minimumHeight()) {
           QRect rect = geometry();
-          rect.setTop(rect.y() + m_movePoint.y());
+          rect.setTop(rect.y() + move_point_.y());
           setGeometry(rect);
         }
       } break;
@@ -459,23 +460,23 @@ void QtGUI::resizeRegion(int marginTop, int marginBottom, int marginLeft,
       } break;
     }
   } else {
-    m_bIsResizing = false;
-    m_direction = NONE;
+    b_is_resizing_ = false;
+    direction_ = NONE;
   }
 }
 
 void QtGUI::mouseReleaseEvent(QMouseEvent* event) {
   if (event->button() == Qt::LeftButton) {
-    m_bIsPressed = false;
-    m_bIsResizing = false;
-    m_bIsDoublePressed = false;
+    b_is_pressed_ = false;
+    b_is_resizing_ = false;
+    b_is_double_pressed_ = false;
   }
   QWidget::mouseReleaseEvent(event);
 }
 void QtGUI::leaveEvent(QEvent* event) {
-  m_bIsPressed = false;
-  m_bIsDoublePressed = false;
-  m_bIsResizing = false;
+  b_is_pressed_ = false;
+  b_is_double_pressed_ = false;
+  b_is_resizing_ = false;
   QWidget::leaveEvent(event);
 }
 
@@ -501,14 +502,14 @@ void QtGUI::OnNotify(const UserInfo& message) {
                 QString::fromStdString("欢迎你，" + message.user_name()));
     cur_notify_cnter = 0;
   }
-  le_email->setText(QString::fromStdString(message.email()));
+  le_email_->setText(QString::fromStdString(message.email()));
   QByteArray pic_array(message.profile_picture().data(),
                        message.profile_picture().size());
   QPixmap pic;
   pic.loadFromData(pic_array);
-  lb_headshot->setPixmap(pic);
-  le_username->setText(QString::fromStdString(message.user_name()));
-  le_lastused->setText(
+  lb_headshot_->setPixmap(pic);
+  le_username_->setText(QString::fromStdString(message.user_name()));
+  le_lastused_->setText(
       QString::fromStdString(message.last_recognized_datetime()));
 }
 

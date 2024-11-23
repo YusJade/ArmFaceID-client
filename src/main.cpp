@@ -1,4 +1,7 @@
+#include <qevent.h>
+
 #include <QApplication>
+#include <QFile>
 #include <memory>
 #include <string>
 #include <thread>
@@ -16,17 +19,19 @@
 #include "camera.h"
 #include "face_analyzer.h"
 #include "grpc/include/rpc_client.h"
-#include "qt_gui/qt_gui.h"
-
-#include "face.pb.h"
+#include "qt_gui/client.h"
+// #include "qt_gui/qt_gui.h"
 
 ABSL_FLAG(int, camera_index, 0, "必需：本地摄像头 index");
 ABSL_FLAG(bool, net_camera, true, "可选：是否启用网络摄像头");
 ABSL_FLAG(std::string, camera_url, "http://localhost:3306/",
           "可选：网络摄像头 url");
 ABSL_FLAG(std::string, model_dir, "./", "必需： SeetaFace6 的模型路径");
-ABSL_FLAG(std::string, server_ip, "face.yusjade.world", "必需：服务器 ip");
-ABSL_FLAG(std::string, server_port, "80", "必需：服务器 port");
+ABSL_FLAG(std::string, server_addr, "armfaceid.yusjade.world",
+          "必需：服务器 ip");
+
+using arm_face_id::Client;
+using arm_face_id::RpcClient;
 
 int main(int argc, char *argv[]) {
   // 解析命令行参数，配置各个模块的设置
@@ -36,14 +41,12 @@ int main(int argc, char *argv[]) {
   int camera_index = absl::GetFlag(FLAGS_camera_index);
   bool enable_net_camera = absl::GetFlag(FLAGS_net_camera);
   std::string camera_url = absl::GetFlag(FLAGS_camera_url);
-  std::string server_ip = absl::GetFlag(FLAGS_server_ip);
-  std::string server_port = absl::GetFlag(FLAGS_server_port);
+  std::string server_addr = absl::GetFlag(FLAGS_server_addr);
   std::string model_dir = absl::GetFlag(FLAGS_model_dir);
 
   // TODO: 初始化 gRPC 服务器
-  std::string addr = fmt::format("{}:{}", server_ip, server_port);
   auto rpc_client = std::make_shared<arm_face_id::RpcClient>(
-      grpc::CreateChannel(addr, grpc::InsecureChannelCredentials()));
+      grpc::CreateChannel(server_addr, grpc::InsecureChannelCredentials()));
   std::thread client_thread(&arm_face_id::RpcClient::ProcessAsyncReply,
                             rpc_client.get());
   client_thread.detach();
@@ -87,13 +90,20 @@ int main(int argc, char *argv[]) {
   /*---- 初始化 Qt 用户界面  ----*/
   QApplication app(argc, argv);
 
-  std::shared_ptr<arm_face_id::QtGUI> qt_gui(new arm_face_id::QtGUI);
-  qt_gui->InitWindow();
-  qt_gui->show();
-  camera.AddObserver<cv::Mat>(qt_gui);
-  face_analyzer.AddObserver<arm_face_id::FaceAnalyzer::EventBase>(qt_gui);
-  face_analyzer.AddObserver<arm_face_id::FaceAnalyzer::AnalyzeMsg>(qt_gui);
-  rpc_client->AddObserver<arm_face_id::UserInfo>(qt_gui);
+  // TODO: style
+  QFile qss(":/AMOLED.qss");
+  qss.open(QFile::ReadOnly);
+  QString style_sheet = QLatin1String(qss.readAll());
+  app.setStyleSheet(style_sheet);
+
+  std::shared_ptr<Client> client_gui = std::make_shared<Client>();
+  //   client_gui->InitWindow();
+  client_gui->show();
+  camera.AddObserver<cv::Mat>(client_gui);
+  face_analyzer.AddObserver<arm_face_id::FaceAnalyzer::AnalyzeMsg>(client_gui);
+  rpc_client->AddObserver<arm_face_id::UserInfo>(client_gui);
+  //   face_analyzer.AddObserver<arm_face_id::FaceAnalyzer::EventBase>(client_gui);
+
   /*----------------------------*/
 
   return app.exec();
