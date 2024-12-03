@@ -1,0 +1,14 @@
+<RCC>
+    <qresource prefix="/">
+        <file>MonacoNerdFont-Regular.ttf</file>
+        <file>tips/notification_close_hover.png</file>
+        <file>tips/notification_close.png</file>
+        <file>tips/type_error.png</file>
+        <file>tips/type_information.png</file>
+        <file>tips/type_success.png</file>
+        <file>tips/type_warning.png</file>
+        <file>background.png</file>
+        <file>style.qss</file>
+        <file>AMOLED.qss</file>
+    </qresource>
+</RCC>

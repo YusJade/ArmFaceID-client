@@ -1,6 +1,6 @@
 
 
-#include <fmt/core.h>
+#include <spdlog/fmt/fmt.h>
 namespace arm_face_id {
 namespace log {
 template <typename... Args>

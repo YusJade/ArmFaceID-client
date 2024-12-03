@@ -10,7 +10,7 @@
 #include <absl/flags/flag.h>
 #include <absl/flags/parse.h>
 #include <absl/flags/usage.h>
-#include <fmt/core.h>
+// #include <fmt/core.h>
 #include <grpcpp/create_channel.h>
 #include <grpcpp/security/credentials.h>
 #include <opencv2/core/mat.hpp>
