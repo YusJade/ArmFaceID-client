@@ -11,11 +11,18 @@ set(CMAKE_AUTOMOC ON)
 include_directories(include third_party third_party/treasure_chest)
 
 if(EXISTS "${CMAKE_SOURCE_DIR}/path_config.cmake")
-  message(STATUS "应用配置文件 path_config.cmake")
+  message(STATUS "include path_config.cmake")
   include(path_config.cmake)
 endif()
 
-set(CMAKE_MODULE_PATH $ENV{SeetaFace6_DIR}/cmake ${SeetaFace6_DIR}/cmake)
+if(EXISTS "${CMAKE_SOURCE_DIR}/utils.cmake")
+  message(STATUS "include utils.cmake")
+  include(utils.cmake)
+endif()
+
+set(CMAKE_MODULE_PATH 
+  # $ENV{SeetaFace6_DIR}/cmake 
+  ${SeetaFace6_DIR}/cmake)
 message(STATUS "CMAKE_MODULE_PATH: ${CMAKE_MODULE_PATH}")
 
 set(SeetaFaceDetector_ROOT_DIR $ENV{SeetaFace6_DIR})
@@ -68,9 +75,11 @@ else()
   endif()
 endif()
 
+message(STATUS "Qt6_DIR: ${Qt6_DIR}")
+message(STATUS "Qt5_DIR: ${Qt5_DIR}")
+
 message(STATUS "Qt6_FOUND: ${Qt6_FOUND}")
 message(STATUS "Qt5_FOUND: ${Qt5_FOUND}")
-
 
 add_executable(armfaceid-client ${SOURCES})
 
